@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "51604544208",
+    "project_id": "reuse-f0081",
+    "storage_bucket": "reuse-f0081.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51604544208:android:9abaa31b52d28bd6221cd5",
+        "android_client_info": {
+          "package_name": "com.reuse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51604544208-etfd233m1hegv554odpoimd60bbkrijb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reuse",
+            "certificate_hash": "889e3e2eb152b1d5333940ade8f29cf0f9d9f0cb"
+          }
+        },
+        {
+          "client_id": "51604544208-h26tjd4s1klrbf50eld0ti6l98p3oamm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reuse",
+            "certificate_hash": "c05ef6625b180d889e23fea205f69b42c32f8fd3"
+          }
+        },
+        {
+          "client_id": "51604544208-npaek4attfifbd8tqgq0k3dc7br20t3c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reuse",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "51604544208-6on9b4pi6cir1intl430m18u6v70ije6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOhGwiYdXrUCtE6_yKxhf8xKWFXsie0Hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51604544208-6on9b4pi6cir1intl430m18u6v70ije6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51604544208:android:628f26d8a06d3f4d221cd5",
+        "android_client_info": {
+          "package_name": "com.reusedonator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51604544208-6on9b4pi6cir1intl430m18u6v70ije6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOhGwiYdXrUCtE6_yKxhf8xKWFXsie0Hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51604544208-6on9b4pi6cir1intl430m18u6v70ije6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
