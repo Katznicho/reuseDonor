@@ -7,6 +7,7 @@ import {
   View,
   Alert,
   TouchableOpacity,
+  Dimensions
 } from 'react-native';
 
 import {
@@ -17,16 +18,16 @@ import {
   SPACING,
 } from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
-import { Dimensions } from 'react-native';
 import { RootState } from '../redux/store/dev';
 import { useSelector } from 'react-redux';
 import { useShowGreeting } from '../hooks/useShowGreetings';
-import { useFirebase } from '../hooks/useFirebase';
 import messaging from '@react-native-firebase/messaging';
 import Geolocation from '@react-native-community/geolocation';
 import { generalStyles } from './utils/generatStyles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DeviceInfo from 'react-native-device-info';
+import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 
 
 
@@ -34,7 +35,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const HomeScreen = ({ navigation }: any) => {
 
-  const { updateUserLocation, updateUserDeviceId, getUserTotals, getAllCommunities } = useFirebase();
   const [position, setPosition] = useState<any>(null);
 
   const [loading, setLoading] = useState(false)
@@ -42,9 +42,7 @@ const HomeScreen = ({ navigation }: any) => {
   const [totals, setTotal] = useState<any>(null)
   const [communityTotal, setCommunityTotal] = useState<any>(null)
 
-  const { user } = useSelector(
-    (state: RootState) => state.user,
-  );
+  const { user, authToken } = useSelector((state: RootState) => state.user);
 
   let greetings = useShowGreeting()
 
@@ -60,56 +58,103 @@ const HomeScreen = ({ navigation }: any) => {
     );
   };
 
-
-
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-
-      const fcmToken = await messaging().getToken();
-
-      updateUserDeviceId(user?.UID, fcmToken)
-
-    }
-    else {
-
-    }
-  }
-
-
   useEffect(() => {
     setLoading(true);
 
     setLoading(false);
     getCurrentPosition();
-    if (position) {
-      updateUserLocation(user?.UID, position.latitude, position.longitude);
-    }
-
-    requestUserPermission();
-    getUserTotals(user?.UID).then((data: any) => {
-      setTotal(data)
-    })
-
-    getAllCommunities().then((data: any) => {
-      setCommunityTotal(data)
-    })
-
-
-
-
 
 
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        let deviceId = DeviceInfo.getDeviceId();
+        let model = DeviceInfo.getModel();
+        const manufacture = await DeviceInfo.getManufacturer();
+        let readableVersion = DeviceInfo.getReadableVersion();
+        let systemName = DeviceInfo.getSystemName();
+        let systemVersion = DeviceInfo.getSystemVersion();
+        const userAgent = await DeviceInfo.getUserAgent();
+        let type = DeviceInfo.getDeviceType();
+        const devicePushToken = await messaging().getToken();
+
+
+
+        if (
+          deviceId &&
+          model &&
+          manufacture &&
+          readableVersion &&
+          systemName &&
+          systemVersion &&
+          userAgent &&
+          type
+        ) {
+          saveDeviceInfo(
+            devicePushToken,
+            deviceId,
+            model,
+            manufacture,
+            readableVersion,
+            systemName,
+            systemVersion,
+            userAgent,
+            type,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function saveDeviceInfo(
+    push_token: string,
+    device_id: string,
+    device_model: string,
+    device_manufacturer: string,
+    app_version: string,
+    device_os: string,
+    device_os_version: string,
+    device_user_agent: string,
+    device_type: string,
+  ) {
+    const headers = new Headers();
+    headers.append('Accept', 'application/json');
+    headers.append('Authorization', `Bearer ${authToken}`);
+
+    const body = new FormData();
+    body.append('push_token', push_token);
+    body.append('device_id', device_id);
+    body.append('device_model', device_model);
+    body.append('device_manufacturer', device_manufacturer);
+    body.append('app_version', app_version);
+    body.append('device_os', device_os);
+    body.append('device_os_version', device_os_version);
+    body.append('device_user_agent', device_user_agent);
+    body.append('device_type', device_type);
+
+
+    fetch(`${SAVE_DEVICE_INFO}`, {
+      headers,
+      method: 'POST',
+      body,
+    })
+      .then(a => a.json())
+      .then(result => {
+
+      })
+      .catch(error => {
+      });
+  }
+
 
   return (
     <View style={styles.ScreenContainer}>
-      <StatusBar backgroundColor={COLORS.primaryBlackHex} />
+      <StatusBar backgroundColor={COLORS.primaryOrangeHex} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}

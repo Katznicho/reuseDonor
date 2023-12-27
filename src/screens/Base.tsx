@@ -67,4 +67,3 @@ const Base = () => {
 
 export default Base
 
-const styles = StyleSheet.create({})

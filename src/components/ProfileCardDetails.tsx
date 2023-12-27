@@ -7,17 +7,21 @@ import {
 } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../theme/theme';
+import { COLORS, FONTFAMILY } from '../theme/theme';
 import { generalStyles } from '../screens/utils/generatStyles';
 import Entypo from "react-native-vector-icons/Entypo";
 import Share from 'react-native-share';
-import { useFirebase } from '../hooks/useFirebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store/dev';
+import { LOGOUT } from '../screens/utils/constants/routes';
+import { logoutUser } from '../redux/store/slices/UserSlice';
 
 
 const ProfileDetailsCard = ({
     details,
 }: any) => {
-    const { logout } = useFirebase();
+    const { authToken } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<any>()
 
 
     const handleShareApp = async () => {
@@ -44,7 +48,22 @@ const ProfileDetailsCard = ({
         try {
 
             // Handle any additional actions after the user is signed out
-            await logout();
+            // await logout();   
+            const headers = new Headers();
+            headers.append('Accept', 'application/json');
+            headers.append('Authorization', `Bearer ${authToken}`);
+            fetch(`${LOGOUT}`, {
+                headers,
+                method: 'POST',
+            })
+                .then(a => a.json())
+                .then(result => {
+                    dispatch(logoutUser());
+                })
+                .catch(error => {
+                });
+
+
 
         } catch (error) {
         }
@@ -77,22 +96,23 @@ const ProfileDetailsCard = ({
                 return item.name === 'Sign Out' ?
                     (
                         <TouchableOpacity
+                            activeOpacity={1}
                             style={[generalStyles.flexStyles, styles.containerStyle]}
                             key={index}
                             onPress={onSignOut}
                         >
-                            <View style={{ paddingVertical: 20 }}>
+                            <View style={styles.viewStyle}>
                                 <Text style={[styles.textStyle, { color: COLORS.primaryRedHex }]}>
                                     {item.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>
                     ) : (item.name == "Share App" ? (<TouchableOpacity
-                        style={[generalStyles.flexStyles, styles.containerStyle]}
+                        style={[generalStyles.flexStyles, styles.containerStyle, { borderBottomWidth: 0.5, borderBottomColor: COLORS.secondaryLightGreyHex }]}
                         key={index}
                         onPress={() => handleShareApp()}
                     >
-                        <View style={{ paddingVertical: 20 }}>
+                        <View style={styles.viewStyle}>
                             <Text style={[styles.textStyle, { color: COLORS.primaryWhiteHex }]}>
                                 {item.name}
                             </Text>
@@ -101,10 +121,11 @@ const ProfileDetailsCard = ({
                         (
                             <TouchableOpacity
                                 key={index}
+                                activeOpacity={1}
                                 onPress={() => navigation.navigate(item.screen)}
-                                style={[generalStyles.flexStyles, styles.containerStyle]}
+                                style={[generalStyles.flexStyles, styles.containerStyle, { borderBottomWidth: 0.5, borderBottomColor: COLORS.secondaryLightGreyHex }]}
                             >
-                                <View style={{ paddingVertical: 20 }}>
+                                <View style={styles.viewStyle}>
                                     <Text style={styles.textStyle}>{item.name}</Text>
                                 </View>
                                 <TouchableOpacity
@@ -115,6 +136,9 @@ const ProfileDetailsCard = ({
                                         name="chevron-right"
                                         color={COLORS.primaryWhiteHex}
                                         size={28}
+                                        style={{
+                                            fontFamily: FONTFAMILY.poppins_light,
+                                        }}
                                     />
                                 </TouchableOpacity>
                             </TouchableOpacity>
@@ -132,13 +156,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginHorizontal: 15,
-        // borderBottomColor: COLORS.primaryGreyHex,
-        borderBottowWidth: 0.5,
-
+        borderBottomColor: "red",
+        borderBottowWidth: 10,
     },
     textStyle: {
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        fontFamily: FONTFAMILY.poppins_light,
         color: COLORS.primaryWhiteHex,
-        fontSize: 18,
+        fontSize: 15,
     },
+    viewStyle: {
+        paddingVertical: 10,
+
+    }
 });

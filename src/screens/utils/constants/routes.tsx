@@ -1,0 +1,9 @@
+export const BASE_URL = "https://reuse.risidev.com/api/v1";
+
+export const LOGIN = `${BASE_URL}/auth/login`;
+export const REGISTER = `${BASE_URL}/auth/register`;
+export const LOGOUT = `${BASE_URL}/auth/logout`;
+export const FORGOT_PASSWORD = `${BASE_URL}/auth/forgotPassword`;
+export const RESET_PASSWORD = `${BASE_URL}/auth/resetPassword`;
+export const VERIFY_EMAIL = `${BASE_URL}/auth/verifyEmail`
+export const SAVE_DEVICE_INFO = `${BASE_URL}/auth/saveDeviceInfo`

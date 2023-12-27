@@ -15,7 +15,7 @@ const SupportScreen = () => {
     const onMakeCall = () => {
 
         const args = {
-            number: '2569983853', // String value with the number to call
+            number: '256759983853', // String value with the number to call
             prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call 
             skipCanOpen: true // Skip the canOpenURL check
         }
@@ -25,18 +25,14 @@ const SupportScreen = () => {
     }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primaryBlackHex }}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={generalStyles.scrollViewContentPadding}>
                 <TextComponent text={SUPPORT_US} />
+                <TouchableOpacity
+                    style={[generalStyles.loginContainer, { marginTop: 0, padding: 10 }]}
+                    onPress={() => onMakeCall()}>
+                    <Text style={generalStyles.loginText}>{'Call Immediately'}</Text>
+                </TouchableOpacity>
 
-                {/* call immediately */}
-                <View style={{ margin: 20 }}>
-
-                    <TouchableOpacity
-                        style={generalStyles.loginContainer}
-                        onPress={() => onMakeCall()}>
-                        <Text style={generalStyles.loginText}>{'Call Immediately'}</Text>
-                    </TouchableOpacity>
-                </View>
                 {/* call immediately */}
             </ScrollView>
         </SafeAreaView>

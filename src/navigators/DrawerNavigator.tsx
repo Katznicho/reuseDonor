@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { View, Text } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
 import { COLORS } from '../theme/theme';
@@ -112,4 +112,3 @@ const DrawerNavigator = () => {
 
 export default DrawerNavigator
 
-const styles = StyleSheet.create({})

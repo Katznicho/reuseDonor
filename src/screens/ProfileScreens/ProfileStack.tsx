@@ -10,6 +10,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import SupportScreen from './SupportScreen';
 import EditProfile from './EditProfile';
+import { generalStyles } from '../utils/generatStyles';
 
 
 
@@ -26,13 +27,9 @@ const ProfileStack = () => {
         component={Profile}
         options={{
           title: 'Your Profile',
-          headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
-          },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerStyle: generalStyles.headerStyle,
+          headerTitleStyle: generalStyles.titleHeaderStyles,
+          headerTintColor: COLORS.primaryBlackHex,
           headerTitleAlign: 'center',
 
         }}
@@ -42,13 +39,9 @@ const ProfileStack = () => {
         component={PrivatePolicy}
         options={{
           title: 'Private Policy',
-          headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
-          },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerStyle: generalStyles.headerStyle,
+          headerTitleStyle: generalStyles.titleHeaderStyles,
+          headerTintColor: COLORS.primaryBlackHex,
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -57,7 +50,7 @@ const ProfileStack = () => {
             >
               <Entypo
                 name="chevron-left"
-                color={COLORS.primaryWhiteHex}
+                color={COLORS.primaryBlackHex}
                 size={28}
               />
             </TouchableOpacity>
@@ -70,13 +63,9 @@ const ProfileStack = () => {
         component={AboutUs}
         options={{
           title: 'About Us',
-          headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
-          },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerStyle: generalStyles.headerStyle,
+          headerTitleStyle: generalStyles.titleHeaderStyles,
+          headerTintColor: COLORS.primaryBlackHex,
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -85,7 +74,7 @@ const ProfileStack = () => {
             >
               <Entypo
                 name="chevron-left"
-                color={COLORS.primaryWhiteHex}
+                color={COLORS.primaryBlackHex}
                 size={28}
               />
             </TouchableOpacity>
@@ -98,13 +87,9 @@ const ProfileStack = () => {
         component={SupportScreen}
         options={{
           title: 'Support',
-          headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
-          },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerStyle: generalStyles.headerStyle,
+          headerTitleStyle: generalStyles.titleHeaderStyles,
+          headerTintColor: COLORS.primaryBlackHex,
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -113,7 +98,7 @@ const ProfileStack = () => {
             >
               <Entypo
                 name="chevron-left"
-                color={COLORS.primaryWhiteHex}
+                color={COLORS.primaryBlackHex}
                 size={28}
               />
             </TouchableOpacity>
@@ -126,13 +111,9 @@ const ProfileStack = () => {
         component={EditProfile}
         options={{
           title: 'Edit Profile',
-          headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
-          },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerStyle: generalStyles.headerStyle,
+          headerTitleStyle: generalStyles.titleHeaderStyles,
+          headerTintColor: COLORS.primaryBlackHex,
           headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity
@@ -141,7 +122,7 @@ const ProfileStack = () => {
             >
               <Entypo
                 name="chevron-left"
-                color={COLORS.primaryWhiteHex}
+                color={COLORS.primaryBlackHex}
                 size={28}
               />
             </TouchableOpacity>

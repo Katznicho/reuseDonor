@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import HeadProfileCard from '../../components/HeadProfileCard';
 import ProfileDetailsCard from '../../components/ProfileCardDetails';
 import { COLORS } from '../../theme/theme';
+import { generalStyles } from '../utils/generatStyles';
 
 
 
@@ -53,14 +54,12 @@ const Profile = () => {
         flex: 1,
         backgroundColor: COLORS.primaryBlackHex,
       }}
+
     >
-      <ScrollView showsVerticalScrollIndicator={false}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={generalStyles.scrollViewContentPadding}>
         {/* header profile card */}
         <HeadProfileCard />
         {/* header profile card */}
-
-
 
         {/* profile details */}
         <ProfileDetailsCard

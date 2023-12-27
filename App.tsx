@@ -7,6 +7,7 @@ import { persistor, store } from './src/redux/store/dev';
 import { PersistGate } from 'redux-persist/integration/react';
 import FlashMessage from 'react-native-flash-message';
 import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,10 +19,11 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          
+          <QueryClientProvider client={new QueryClient()}>
             <Base />
-            <FlashMessage position="top" animated />
-          
+          </QueryClientProvider>
+          <FlashMessage position="top" animated />
+
         </PersistGate>
       </Provider>
     </GestureHandlerRootView>

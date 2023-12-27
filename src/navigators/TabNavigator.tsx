@@ -38,7 +38,8 @@ const TabNavigator = () => {
             style={styles.BlurViewStyles}
           />
         ),
-      }}>
+      }}
+    >
       <Tab.Screen
         name="HomeTab"
         component={HomeScreen}
@@ -116,7 +117,7 @@ const TabNavigator = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    height: 80,
+    height: 60,
     position: 'absolute',
     backgroundColor: COLORS.primaryBlackRGBA,
     borderTopWidth: 0,

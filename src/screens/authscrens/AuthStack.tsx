@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import appTheme from '../../theme/theme';
 import Login from './Login';
 import { COLORS } from '../../theme/theme';
 import Register from './Register';
+import { generalStyles } from '../utils/generatStyles';
 
 
 const Stack = createNativeStackNavigator();
@@ -20,13 +20,12 @@ const AuthStack = () => {
                 options={{
                     title: 'Login',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 25,
-                    },
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTintColor: COLORS.primaryBlackHex,
+
                 }}
             />
 
@@ -36,13 +35,11 @@ const AuthStack = () => {
                 options={{
                     title: 'Register',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 25,
-                    },
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTintColor: COLORS.primaryBlackHex,
                 }}
             />
         </Stack.Navigator>

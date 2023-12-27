@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import React from 'react';
-import { COLORS } from '../theme/theme';
+import { COLORS, FONTFAMILY } from '../theme/theme';
 
 
 
@@ -9,8 +9,8 @@ const TextComponent = ({ text }: any) => {
 
 
     return (
-        <View style={{ marginHorizontal: 20, marginVertical: 20 }}>
-            <Text style={{ color: COLORS.primaryWhiteHex, fontSize: 16 }}>
+        <View style={{ marginHorizontal: 20 }}>
+            <Text style={{ color: COLORS.primaryWhiteHex, fontSize: 16, fontFamily: FONTFAMILY.poppins_light, }}>
                 {text}
             </Text>
         </View>
