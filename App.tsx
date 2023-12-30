@@ -8,6 +8,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import FlashMessage from 'react-native-flash-message';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { StatusBar } from 'react-native';
+import { COLORS } from './src/theme/theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,7 @@ const App = () => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <QueryClientProvider client={new QueryClient()}>
+            <StatusBar backgroundColor={COLORS.primaryOrangeHex} />
             <Base />
           </QueryClientProvider>
           <FlashMessage position="top" animated />

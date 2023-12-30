@@ -1,15 +1,17 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, Image, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import React, { useState } from 'react'
 import { generalStyles } from '../utils/generatStyles';
 import { useNavigation } from '@react-navigation/native';
-import { COLORS, FONTFAMILY } from '../../theme/theme';
+import { COLORS } from '../../theme/theme';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
 import { showMessage } from 'react-native-flash-message';
 import { LOGIN } from '../utils/constants/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateUserState } from '../../redux/store/slices/UserSlice';
 import { useDispatch } from 'react-redux';
+import { validateEmail } from '../utils/helpers/helpers';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Login = () => {
   const dispatch = useDispatch<any>()
@@ -18,16 +20,16 @@ const Login = () => {
   const [email, setEmail] = React.useState<any>('');
   const [password, setPassword] = React.useState<any>('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  // Function to toggle the password visibility state 
+  const toggleShowPassword = () => { setShowPassword(!showPassword); };
 
   const [errors, setErrors] = useState<any>({
     email: '',
     password: '',
   });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+
 
   const onPressLogin = async () => {
     if (email == "") {
@@ -258,17 +260,28 @@ const Login = () => {
           <View>
             <Text style={generalStyles.formInputTextStyle}>
               Password</Text>
+          </View >
+          <View style={[generalStyles.flexStyles, styles.viewStyles]}>
+            <TextInput
+              style={[generalStyles.formInput, { flex: 1 }]}
+              placeholderTextColor={COLORS.primaryWhiteHex}
+              secureTextEntry={!showPassword}
+              placeholder={'enter password'}
+              onChangeText={text => setPassword(text)}
+              value={password}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <MaterialCommunityIcons
+              name={showPassword ? 'eye-off' : 'eye'}
+              size={24}
+              color={COLORS.secondaryGreyHex}
+              style={styles.icon}
+              onPress={toggleShowPassword}
+            />
+
           </View>
-          <TextInput
-            style={generalStyles.formInput}
-            placeholderTextColor={COLORS.primaryWhiteHex}
-            secureTextEntry
-            placeholder={'enter password'}
-            onChangeText={text => setPassword(text)}
-            value={password}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
+
           <View>
             {errors.password && <Text style={generalStyles.errorText}>{errors.password}</Text>}
           </View>
@@ -278,7 +291,10 @@ const Login = () => {
 
 
         <View style={generalStyles.forgotPasswordContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
             <Text style={generalStyles.forgotText}>
               {'Forgot password?'}
             </Text>
@@ -286,6 +302,7 @@ const Login = () => {
         </View>
 
         <TouchableOpacity
+          activeOpacity={1}
           style={generalStyles.loginContainer}
           onPress={() => onPressLogin()}>
           <Text style={generalStyles.loginText}>{'Login'}</Text>
@@ -318,4 +335,16 @@ const Login = () => {
 }
 
 export default Login
+
+const styles = StyleSheet.create({
+
+  icon: {
+    marginLeft: -20,
+  },
+  viewStyles: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+});
 

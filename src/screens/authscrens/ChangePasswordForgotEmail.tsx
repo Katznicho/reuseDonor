@@ -2,24 +2,12 @@ import {
     StyleSheet,
     Text,
     View,
-    KeyboardAvoidingView,
-    Platform,
     ScrollView,
     TextInput as RNTextInput,
     TouchableOpacity,
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { theme } from '../../theme/theme';
-import { IconButton } from 'react-native-paper';
-import {
-    causeVibration,
-    confirmPasswordError,
-    getErrorMessage,
-} from '../../utils/Helpers';
-import { TextInput } from 'react-native-paper';
-import { HelperText, Button } from 'react-native-paper';
-import { generalstyles } from '../../generalstyles/generalstyles';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -27,8 +15,15 @@ import Animated, {
     withSequence,
     withTiming,
 } from 'react-native-reanimated';
-import { BASE_URL } from '../../constants/endpoints';
 import { showMessage } from 'react-native-flash-message';
+import { causeVibration, getErrorMessage } from '../utils/helpers/helpers';
+import { RESET_PASSWORD } from '../utils/constants/routes';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { generalStyles } from '../utils/generatStyles';
+import { COLORS } from '../../theme/theme';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 const ChangePasswordForgotEmail = () => {
     const { params } = useRoute<any>();
@@ -37,11 +32,9 @@ const ChangePasswordForgotEmail = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-
-    //password icons
-    const [passwordType, setPasswordType] = useState(true);
-
-    const [, setConfirmPasswordType] = useState(true);
+    const [showPassword, setShowPassword] = useState<boolean>(false)
+    // Function to toggle the password visibility state 
+    const toggleShowPassword = () => { setShowPassword(!showPassword); };
 
     const [errors, setErrors] = useState<any>({});
 
@@ -71,6 +64,41 @@ const ChangePasswordForgotEmail = () => {
 
     function changePassword() {
         try {
+            if (otpCode == "") {
+                setErrors((prevErrors: any) => ({
+                    ...prevErrors,
+                    otpCode: "Code is required"
+                }));
+                return;
+            }
+            if (password == "") {
+                setErrors((prevErrors: any) => ({
+                    ...prevErrors,
+                    password: "Password is required"
+                }));
+                return;
+            }
+            if (confirmPassword == "") {
+                setErrors((prevErrors: any) => ({
+                    ...prevErrors,
+                    confirmpassword: "Confirm Password is required"
+                }));
+                return;
+            }
+
+            if (password != confirmPassword) {
+                showMessage({
+                    message: 'Password Mismatch',
+                    description: 'Passwords must match',
+                    type: 'info',
+                    icon: 'info',
+                    duration: 3000,
+                    autoHide: true,
+                });
+                return;
+
+            }
+
             setLoading(true);
 
             const headers = new Headers();
@@ -80,17 +108,17 @@ const ChangePasswordForgotEmail = () => {
             body.append('email', params?.email.toLowerCase());
             body.append('otp', otpCode);
             body.append('new_password', password);
-            body.append('confirmPassword', confirmPassword);
+            body.append('confirm_new_password', confirmPassword);
 
-            fetch(`${BASE_URL}/client/auth/requestPasswordReset`, {
+
+
+            fetch(`${RESET_PASSWORD}`, {
                 method: 'POST',
                 headers,
                 body,
             })
                 .then(response => response.json())
                 .then(async result => {
-                    console.log(result);
-
                     if (result?.errors) {
                         setErrors(result.errors);
                         causeVibration();
@@ -163,12 +191,9 @@ const ChangePasswordForgotEmail = () => {
     }
 
     return (
-        <KeyboardAvoidingView
-            style={{
-                flex: 1,
-                backgroundColor: theme.colors.primary,
-            }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
         >
             <ScrollView
                 contentContainerStyle={{
@@ -176,241 +201,150 @@ const ChangePasswordForgotEmail = () => {
                 }}
                 keyboardShouldPersistTaps="always"
             >
-                <View style={{ marginTop: Platform.OS === 'ios' ? 20 : 0 }}>
-                    <IconButton
-                        icon="chevron-left"
-                        iconColor={theme.colors.white}
-                        size={28}
-                        onPress={() => navigation.goBack()}
-                        containerColor={theme.colors.arraowBackGroundColor}
-                    />
-                </View>
+
                 <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                    <Text
-                        style={{
-                            color: theme.colors.white,
-                            fontSize: 30,
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        Change Password
+                    <Text style={[{ fontSize: 20 }, generalStyles.textStyle]}>
+                        Change Password?
                     </Text>
                 </View>
                 <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-                    <Text
-                        style={{
-                            color: theme.colors.placeholder,
-                            fontSize: 15,
-                        }}
-                    >
+                    <Text style={[generalStyles.textStyle]}>
                         Check your email. We have sent you a code. You need the
                         code to change your password
                     </Text>
                 </View>
 
                 {/* code */}
-                <View>
+                <View style={generalStyles.formContainer}>
                     <View>
-                        <RNTextInput
-                            style={styles.otpInput}
-                            placeholder="Enter Code"
-                            placeholderTextColor={theme.colors.placeholder}
-                            keyboardType="number-pad"
-                            value={otpCode}
-                            onChangeText={text => {
-                                setOtpCode(text);
-
-                                if (errors?.otp) {
-                                    setErrors({
-                                        ...errors,
-                                        otp: '',
-                                    });
-                                }
-                            }}
-                            maxLength={6}
-                        />
-
-                        <Animated.Text style={[styles.errorColor, errorStyle]}>
-                            {getErrorMessage(errors, 'otp')}
-                        </Animated.Text>
+                        <Text style={generalStyles.formInputTextStyle}>
+                            Code </Text>
                     </View>
+                    <RNTextInput
+                        style={generalStyles.formInput}
+                        placeholder="Enter Code"
+                        placeholderTextColor={COLORS.primaryLightGreyHex}
+                        keyboardType="number-pad"
+                        value={otpCode}
+                        onChangeText={text => {
+                            setOtpCode(text);
+
+                            if (errors?.otp) {
+                                setErrors({
+                                    ...errors,
+                                    otp: '',
+                                });
+                            }
+                        }}
+                        maxLength={6}
+                    />
+
+                    <Animated.Text style={[styles.errorColor, errorStyle]}>
+                        {getErrorMessage(errors, 'otp')}
+                    </Animated.Text>
+                    <View>
+                        {errors.otpCode && <Text style={generalStyles.errorText}>{errors.otpCode}</Text>}
+                    </View>
+
                 </View>
 
                 {/* code */}
                 {/* password */}
-                <View style={styles.spacing}>
-                    <TextInput
-                        label="New Password"
-                        mode={'flat'}
-                        style={{
-                            backgroundColor: theme.colors.primary,
-                            borderBottomColor: theme.colors.placeholder,
-                            height: 60,
-                            borderBottomWidth: 0,
-                        }}
-                        theme={{
-                            colors: {
-                                text: theme.colors.white,
-                                primary: theme.colors.white,
-                                secondary: theme.colors.white,
-                                surface: theme.colors.white,
-                                onSurface: theme.colors.white,
-                                accent: theme.colors.white,
-                                inverseOnSurface: theme.colors.primary,
-                                inverseSurface: theme.colors.primary,
-                                onSurfaceVariant: theme.colors.white,
-                                placeholder: theme.colors.primary,
-                            },
-                        }}
-                        right={
-                            password.length > 0 && (
-                                <TextInput.Icon
-                                    icon={
-                                        passwordType ? 'eye-off-outline' : 'eye'
-                                    }
-                                    style={{ marginRight: 15, padding: 5 }}
-                                    color={theme.colors.white}
-                                    size={24}
-                                    theme={{
-                                        colors: {
-                                            background: theme.colors.white,
-                                            primary: theme.colors.white,
-                                            onBackground: theme.colors.white,
-                                            surface: theme.colors.white,
-                                        },
-                                    }}
-                                    onPress={() =>
-                                        setPasswordType(!passwordType)
-                                    }
-                                />
-                            )
-                        }
-                        value={password}
-                        outlineColor={theme.colors.primary}
-                        underlineColor={theme.colors.disabled}
-                        selectionColor={theme.colors.primary}
-                        textContentType="password"
-                        onChangeText={text => setPassword(text)}
-                        secureTextEntry={passwordType ? true : false}
-                    />
+                <View style={generalStyles.formContainer}>
+                    <View>
+                        <Text style={generalStyles.formInputTextStyle}>
+                            Password</Text>
+                    </View>
+                    <View style={[generalStyles.flexStyles, styles.viewStyles]}>
+                        <RNTextInput
+                            style={[generalStyles.formInput, { flex: 1 }]}
+                            placeholderTextColor={COLORS.primaryWhiteHex}
+                            secureTextEntry={!showPassword}
+                            placeholder={'enter password'}
+                            onChangeText={text => setPassword(text)}
+                            value={password}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+                        <MaterialCommunityIcons
+                            name={showPassword ? 'eye-off' : 'eye'}
+                            size={24}
+                            color={COLORS.secondaryGreyHex}
+                            style={styles.icon}
+                            onPress={toggleShowPassword}
+                        />
+                    </View>
+
+                    <View>
+                        {errors.password && <Text style={generalStyles.errorText}>{errors.password}</Text>}
+                    </View>
+
                 </View>
+
                 {/* password */}
 
                 {/* confirm password */}
-                <View style={styles.spacing}>
-                    <TextInput
-                        label="Confirm New Password"
-                        mode={'flat'}
-                        style={{
-                            backgroundColor: theme.colors.primary,
-                            borderBottomColor: theme.colors.placeholder,
-                            height: 60,
-                            borderBottomWidth: 0,
-                        }}
-                        autoFocus={true}
-                        theme={{
-                            colors: {
-                                text: theme.colors.white,
-                                primary: theme.colors.white,
-                                secondary: theme.colors.white,
-                                surface: theme.colors.white,
-                                onSurface: theme.colors.white,
-                                accent: theme.colors.white,
-                                inverseOnSurface: theme.colors.primary,
-                                inverseSurface: theme.colors.primary,
-                                onSurfaceVariant: theme.colors.white,
-                                placeholder: theme.colors.primary,
-                            },
-                        }}
-                        right={
-                            confirmPassword.length > 0 && (
-                                <TextInput.Icon
-                                    icon={
-                                        passwordType ? 'eye-off-outline' : 'eye'
-                                    }
-                                    style={{ marginRight: 15, padding: 5 }}
-                                    color={theme.colors.white}
-                                    size={24}
-                                    onPress={() =>
-                                        setConfirmPasswordType(!passwordType)
-                                    }
-                                />
-                            )
-                        }
-                        error={confirmPasswordError(password, confirmPassword)}
-                        value={confirmPassword}
-                        outlineColor={theme.colors.primary}
-                        underlineColor={theme.colors.disabled}
-                        selectionColor={theme.colors.primary}
-                        textContentType="password"
-                        onChangeText={text => setConfirmPassword(text)}
-                        secureTextEntry={passwordType ? true : false}
-                    />
-                    {confirmPasswordError(password, confirmPassword) && (
-                        <HelperText type="error" visible={true}>
-                            {'Passwords dont match'}
-                        </HelperText>
-                    )}
+                <View style={generalStyles.formContainer}>
+                    <View>
+                        <Text style={generalStyles.formInputTextStyle}>
+                            Confirm Password</Text>
+                    </View>
+                    <View style={[generalStyles.flexStyles, styles.viewStyles]}>
+                        <RNTextInput
+                            style={[generalStyles.formInput, { flex: 1 }]}
+                            placeholderTextColor={COLORS.primaryWhiteHex}
+                            secureTextEntry={!showPassword}
+                            placeholder={'confirm  password'}
+                            onChangeText={text => setConfirmPassword(text)}
+                            value={confirmPassword}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+                        <MaterialCommunityIcons
+                            name={showPassword ? 'eye-off' : 'eye'}
+                            size={24}
+                            color={COLORS.secondaryGreyHex}
+                            style={styles.icon}
+                            onPress={toggleShowPassword}
+                        />
+
+                    </View>
+
+                    <View>
+                        {errors.confirmpassword && <Text style={generalStyles.errorText}>{errors.confirmpassword}</Text>}
+                    </View>
+
                 </View>
+
                 {/* confirm  password*/}
 
                 <View>
                     {/* remember me */}
-                    <TouchableOpacity
-                        style={[
-                            generalstyles.centerContent,
-                            generalstyles.flexStyles,
-                            { marginLeft: -40, marginVertical: 10 },
-                        ]}
-                        onPress={() => navigation.navigate('Login')}
-                    >
-                        <Text
-                            style={{
-                                color: theme.colors.buttonColor,
-                                marginLeft: -5,
-                            }}
+
+                    <View style={generalStyles.forgotPasswordContainer}>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPress={() => navigation.navigate("Login")}
                         >
-                            Back to login
-                        </Text>
-                    </TouchableOpacity>
+                            <Text style={generalStyles.forgotText}>
+                                {'Back to Login'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                     {/* remember me */}
 
                     {/* button */}
-                    <View
-                        style={{
-                            marginHorizontal: 40,
-                            marginVertical: 30,
-                            backgroundColor: theme.colors.white,
-                            borderRadius: 20,
-                        }}
-                    >
-                        <Button
-                            mode="contained"
-                            contentStyle={{
-                                flexDirection: 'row-reverse',
-                            }}
-                            loading={loading}
-                            disabled={
-                                loading ||
-                                password == '' ||
-                                confirmPassword == '' ||
-                                confirmPasswordError(
-                                    password,
-                                    confirmPassword,
-                                ) ||
-                                otpCode == ''
-                            }
-                            buttonColor={theme.colors.buttonColor}
-                            textColor={theme.colors.primary}
-                            onPress={changePassword}
-                        >
-                            Change Password
-                        </Button>
-                    </View>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={generalStyles.loginContainer}
+                        onPress={() => changePassword()}>
+                        <Text style={generalStyles.loginText}>{'Reset Password'}</Text>
+                    </TouchableOpacity>
                     {/* button */}
+                    {loading && <ActivityIndicator />}
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -420,13 +354,12 @@ const styles = StyleSheet.create({
     spacing: {
         marginBottom: 10,
     },
-    otpInput: {
-        color: theme.colors.white,
-        fontSize: 20,
-        fontWeight: 'bold',
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.white,
-        padding: 10,
+    icon: {
+        marginLeft: -20,
+    },
+    viewStyles: {
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     errorColor: { color: '#EF4444', fontSize: 12 },
 });

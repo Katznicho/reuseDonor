@@ -1,17 +1,11 @@
 import {
-    StyleSheet,
     Text,
     View,
-    KeyboardAvoidingView,
-    Platform,
+    TextInput,
     ScrollView,
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { theme } from '../../theme/theme';
-import { Button, IconButton } from 'react-native-paper';
-import { TextInput } from 'react-native-paper';
-import { BASE_URL } from '../../constants/endpoints';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -19,8 +13,15 @@ import Animated, {
     withSequence,
     withTiming,
 } from 'react-native-reanimated';
-import { causeVibration, getErrorMessage } from '../../utils/Helpers';
-import { generalstyles } from '../../generalstyles/generalstyles';
+import { causeVibration, validateEmail } from '../utils/helpers/helpers';
+import { RESEND_OTP } from '../utils/constants/routes';
+import { generalStyles } from '../utils/generatStyles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { TouchableOpacity } from 'react-native';
+import { COLORS } from '../../theme/theme';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
+import { showMessage } from 'react-native-flash-message';
+
 
 const ResendEmailScreen = () => {
     const navigation = useNavigation<any>();
@@ -55,6 +56,28 @@ const ResendEmailScreen = () => {
     //
     //Resend OTP
     function resendOtp() {
+        if (email == "") {
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: "Email is required"
+            }));
+            return;
+        }
+
+        if (!validateEmail(email)) {
+
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: 'Invalid email format',
+            }));
+            return;
+
+        } else {
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: '',
+            }));
+        }
         setLoading(true);
 
         const headers = new Headers();
@@ -63,7 +86,7 @@ const ResendEmailScreen = () => {
         const body = new FormData();
         body.append('email', email.toLowerCase());
 
-        fetch(`${BASE_URL}/client/auth/resendOTP`, {
+        fetch(`${RESEND_OTP}`, {
             method: 'POST',
             headers,
             body,
@@ -88,9 +111,16 @@ const ResendEmailScreen = () => {
                     triggerErrorAnimation();
                     return setLoading(false);
                 }
+                showMessage({
+                    message: "Code Resent",
+                    description: "An otp has been resent to your email",
+                    icon: "success",
+                    autoHide: true,
+                    duration: 3000
+                })
 
-                navigation.navigate('Verification', { email: email });
-                // navigation.goBack();
+                navigation.navigate('VerifyEmail', { email: email });
+            
 
                 setLoading(false);
             })
@@ -102,116 +132,59 @@ const ResendEmailScreen = () => {
     }
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
         >
-            <ScrollView keyboardShouldPersistTaps="always">
-                <View style={{ marginTop: Platform.OS === 'ios' ? 20 : 0 }}>
-                    <IconButton
-                        icon="chevron-left"
-                        iconColor={theme.colors.white}
-                        size={28}
-                        onPress={() => navigation.goBack()}
-                        containerColor={theme.colors.arraowBackGroundColor}
-                    />
-                </View>
+            <ScrollView keyboardShouldPersistTaps="always"
+                contentContainerStyle={{
+                    margin: 20,
+                }}
+            >
 
-                <Text style={styles.resendTitle}>Resend OTP Code</Text>
 
-                <Text style={styles.resendText}>
+                <Text style={[{ fontSize: 20 }, generalStyles.textStyle]}>Resend OTP Code</Text>
+
+                <Text style={[generalStyles.textStyle]}>
                     Please re-enter your email again to resend verification code
                 </Text>
 
-                <View style={styles.spacing}>
+                <View style={generalStyles.formContainer}>
+                    <View>
+                        <Text style={generalStyles.formInputTextStyle}>
+                            Email</Text>
+                    </View>
+
                     <TextInput
-                        label="Enter Email"
-                        mode={'flat'}
-                        style={styles.emailInput}
-                        theme={{
-                            colors: {
-                                text: theme.colors.white,
-                                primary: theme.colors.white,
-                            },
-                        }}
+                        style={generalStyles.formInput}
+                        placeholder={'enter email'}
+                        keyboardType="email-address"
+                        placeholderTextColor={COLORS.primaryWhiteHex}
+                        onChangeText={text => setEmail(text)}
                         value={email}
-                        outlineColor={theme.colors.primary}
-                        underlineColor={theme.colors.disabled}
-                        textColor={theme.colors.white}
-                        textContentType="emailAddress"
-                        onChangeText={text => {
-                            setEmail(text);
-
-                            if (errors?.email) {
-                                setErrors({
-                                    ...errors,
-                                    email: '',
-                                });
-                            }
-                        }}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
                     />
+                    <View>
+                        {errors.email && <Text style={generalStyles.errorText}>{errors.email}</Text>}
+                    </View>
 
-                    <Animated.Text style={[styles.errorColor, errorStyle]}>
-                        {getErrorMessage(errors, 'email')}
-                    </Animated.Text>
                 </View>
 
-                <View style={generalstyles.buttonStyles}>
-                    <Button
-                        mode="contained"
-                        // eslint-disable-next-line react-native/no-inline-styles
-                        contentStyle={{
-                            flexDirection: 'row-reverse',
-                        }}
-                        loading={loading}
-                        disabled={loading}
-                        buttonColor={theme.colors.buttonColor}
-                        textColor={theme.colors.primary}
-                        onPress={resendOtp}
-                    >
-                        Send
-                    </Button>
-                </View>
+                {/* button */}
+                <TouchableOpacity
+                    activeOpacity={1}
+                    style={generalStyles.loginContainer}
+                    onPress={() => resendOtp()}>
+                    <Text style={generalStyles.loginText}>{'Resend Email'}</Text>
+                </TouchableOpacity>
+                {/* button */}
+                {loading && <ActivityIndicator />}
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };
 
 export default ResendEmailScreen;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.primary,
-        padding: 20,
-    },
 
-    resendTitle: {
-        color: theme.colors.white,
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginHorizontal: 10,
-        marginVertical: 10,
-    },
-
-    spacing: { marginBottom: 10 },
-
-    errorColor: { color: '#EF4444', fontSize: 12 },
-
-    emailInput: {
-        backgroundColor: theme.colors.primary,
-        borderBottomColor: theme.colors.placeholder,
-        height: 60,
-        borderBottomWidth: 0,
-        color: theme.colors.white,
-    },
-
-    resendText: {
-        color: theme.colors.placeholder,
-        fontSize: 15,
-        width: 200,
-        flexWrap: 'wrap',
-        flexDirection: 'row',
-        margin: 10,
-    },
-});

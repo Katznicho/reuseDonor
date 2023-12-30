@@ -57,6 +57,11 @@ export const generalStyles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 30,
   },
+  textStyle: {
+    fontFamily: FONTFAMILY.poppins_light,
+    color: COLORS.primaryWhiteHex,
+    fontSize: 15,
+  },
   errorText: {
     color: COLORS.primaryRedHex,
     fontSize: 14,

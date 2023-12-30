@@ -154,7 +154,6 @@ const HomeScreen = ({ navigation }: any) => {
 
   return (
     <View style={styles.ScreenContainer}>
-      <StatusBar backgroundColor={COLORS.primaryOrangeHex} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}

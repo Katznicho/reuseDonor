@@ -2,20 +2,14 @@ import {
     Text,
     View,
     TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
+
     ScrollView,
     TextInput,
     StyleSheet,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { theme } from '../../theme/theme';
-import { IconButton, Button } from 'react-native-paper';
-import { generalstyles } from '../../generalstyles/generalstyles';
-import { useDispatch } from 'react-redux';
-import { BASE_URL } from '../../constants/endpoints';
-import { loginUser } from '../../redux/slices/UserSlice';
+
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -23,7 +17,15 @@ import Animated, {
     withSequence,
     withTiming,
 } from 'react-native-reanimated';
-import { causeVibration, getErrorMessage } from '../../utils/Helpers';
+import { useDispatch } from 'react-redux';
+import { VERIFY_EMAIL } from '../utils/constants/routes';
+import { causeVibration, getErrorMessage } from '../utils/helpers/helpers';
+import { showMessage } from 'react-native-flash-message';
+import { COLORS } from '../../theme/theme';
+import { generalStyles } from '../utils/generatStyles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
+
 
 const VerificationScreen = () => {
     const [otpCode, setOtpCode] = useState<any>('');
@@ -33,7 +35,7 @@ const VerificationScreen = () => {
     const [timer, setTimer] = useState(120); // Initial timer value in seconds
 
     const { params } = useRoute<any>();
-    const { email } = params;
+    const { email } = params ?? "katznicho@gmail.com";
     const [errors, setErrors] = useState<any>({});
 
     const rotation = useSharedValue(0);
@@ -83,21 +85,29 @@ const VerificationScreen = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const dispatch = useDispatch<any>();
+
 
     //
     //Verify email address
     function verifyEmail() {
+        if (otpCode == "") {
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                otpCode: "Code is required"
+            }));
+            return;
+        }
         setLoading(true);
 
         const headers = new Headers();
         headers.append('Accept', 'application/json');
 
+
         const body = new FormData();
         body.append('email', email.toLowerCase());
         body.append('otp', otpCode);
 
-        fetch(`${BASE_URL}/client/auth/verifyEmail`, {
+        fetch(`${VERIFY_EMAIL}`, {
             method: 'POST',
             headers,
             body,
@@ -124,7 +134,16 @@ const VerificationScreen = () => {
                 }
 
                 if (result.response === 'success') {
-                    dispatch(loginUser());
+                    //dispatch(loginUser());
+                    showMessage({
+                        message: "Email Valid",
+                        description: "Your email has been verified",
+                        icon: "success",
+                        autoHide: true,
+                        duration: 3000
+
+                    })
+                    navigation.navigate("Login");
                 }
 
                 setLoading(false);
@@ -139,40 +158,36 @@ const VerificationScreen = () => {
     //
     //
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
         >
             <ScrollView
                 contentContainerStyle={{ margin: 20 }}
                 keyboardShouldPersistTaps="always"
             >
-                <View>
-                    <IconButton
-                        icon="chevron-left"
-                        iconColor={theme.colors.white}
-                        size={28}
-                        onPress={() => navigation.goBack()}
-                        containerColor={theme.colors.arraowBackGroundColor}
-                    />
+
+
+                <View style={styles.contentRow}>
+                    <Text style={[{ fontSize: 20 }, generalStyles.textStyle]}>Verification?</Text>
                 </View>
 
                 <View style={styles.contentRow}>
-                    <Text style={styles.verifyTitle}>Verification?</Text>
-                </View>
-
-                <View style={styles.contentRow}>
-                    <Text style={styles.verifyText}>
+                    <Text style={[generalStyles.textStyle]}>
                         Check your email. We have sent you a code
                     </Text>
                 </View>
 
                 <View>
-                    <View>
+                    <View style={generalStyles.formContainer}>
+                        <View>
+                            <Text style={generalStyles.formInputTextStyle}>
+                                Code </Text>
+                        </View>
                         <TextInput
-                            style={styles.otpInput}
+                            style={generalStyles.formInput}
                             placeholder="Enter Code"
-                            placeholderTextColor={theme.colors.placeholder}
+                            placeholderTextColor={COLORS.primaryLightGreyHex}
                             keyboardType="number-pad"
                             value={otpCode}
                             onChangeText={text => {
@@ -191,13 +206,17 @@ const VerificationScreen = () => {
                         <Animated.Text style={[styles.errorColor, errorStyle]}>
                             {getErrorMessage(errors, 'otp')}
                         </Animated.Text>
+                        <View>
+                            {errors.otpCode && <Text style={generalStyles.errorText}>{errors.otpCode}</Text>}
+                        </View>
+
                     </View>
 
                     {showResendLink && (
                         <TouchableOpacity
                             activeOpacity={1}
                             style={[
-                                generalstyles.centerContent,
+                                generalStyles.centerContent,
                                 { marginTop: 30 },
                             ]}
                             onPress={() => {
@@ -210,7 +229,7 @@ const VerificationScreen = () => {
                                 navigation.navigate('ResendEmail');
                             }}
                         >
-                            <Text style={{ color: theme.colors.buttonColor }}>
+                            <Text style={{ color: COLORS.primaryOrangeHex }}>
                                 Click here to Resend Otp
                             </Text>
                         </TouchableOpacity>
@@ -219,60 +238,54 @@ const VerificationScreen = () => {
                     {!showResendLink && (
                         <TouchableOpacity
                             activeOpacity={1}
-                            style={[generalstyles.centerContent]}
+                            style={[generalStyles.centerContent]}
                         >
-                            <Text style={{ color: theme.colors.textColor }}>
+                            <Text style={{ color: COLORS.primaryOrangeHex }}>
                                 Resend Otp in {timer} seconds
                             </Text>
                         </TouchableOpacity>
                     )}
 
-                    <View style={generalstyles.buttonStyles}>
-                        <Button
-                            mode="contained"
-                            // eslint-disable-next-line react-native/no-inline-styles
-                            contentStyle={{
-                                flexDirection: 'row-reverse',
-                            }}
-                            loading={loading}
-                            disabled={otpCode.length < 6 || loading}
-                            buttonColor={theme.colors.buttonColor}
-                            textColor={theme.colors.primary}
-                            onPress={verifyEmail}
-                        >
-                            Verify
-                        </Button>
-                    </View>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={generalStyles.loginContainer}
+                        onPress={() => verifyEmail()}>
+                        <Text style={generalStyles.loginText}>{'Verify'}</Text>
+                    </TouchableOpacity>
+
+                    {loading && <ActivityIndicator />}
+
+
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };
 
 export default VerificationScreen;
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: theme.colors.primary },
+
 
     contentRow: { marginHorizontal: 10, marginVertical: 10 },
 
     verifyTitle: {
-        color: theme.colors.white,
+        color: COLORS.primaryBlackHex,
         fontSize: 30,
         fontWeight: 'bold',
     },
 
     verifyText: {
-        color: theme.colors.placeholder,
+        color: COLORS.primaryLightGreyHex,
         fontSize: 15,
     },
 
     otpInput: {
-        color: theme.colors.white,
+        color: COLORS.primaryBlackHex,
         fontSize: 20,
         fontWeight: 'bold',
         borderBottomWidth: 1,
-        borderBottomColor: theme.colors.white,
+        borderBottomColor: COLORS.primaryBlackHex,
         padding: 10,
     },
 

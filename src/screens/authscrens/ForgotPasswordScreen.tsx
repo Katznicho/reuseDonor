@@ -1,18 +1,12 @@
 import {
     Text,
     View,
-    KeyboardAvoidingView,
-    Platform,
     ScrollView,
+    TouchableOpacity,
+    TextInput
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { theme } from '../../theme/theme';
-import { IconButton } from 'react-native-paper';
-import { causeVibration, emailChecker } from '../../utils/Helpers';
-import { TextInput } from 'react-native-paper';
-import { HelperText, Button } from 'react-native-paper';
-import { BASE_URL } from '../../constants/endpoints';
 import {
     useSharedValue,
     withRepeat,
@@ -20,11 +14,19 @@ import {
     withTiming,
 } from 'react-native-reanimated';
 import { showMessage } from 'react-native-flash-message';
+import { FORGOT_PASSWORD } from '../utils/constants/routes';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { generalStyles } from '../utils/generatStyles';
+import { COLORS } from '../../theme/theme';
+import { causeVibration, validateEmail } from '../utils/helpers/helpers';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState<string>('');
 
-    const [, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<any>({ email: '', });
+
+
 
     const rotation = useSharedValue(0);
     const ANGLE = 10;
@@ -42,6 +44,28 @@ const ForgotPasswordScreen = () => {
     const navigation = useNavigation<any>();
 
     function onForgotPassword() {
+        if (email == "") {
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: "Email is required"
+            }));
+            return;
+        }
+
+        if (!validateEmail(email)) {
+
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: 'Invalid email format',
+            }));
+            return;
+
+        } else {
+            setErrors((prevErrors: any) => ({
+                ...prevErrors,
+                email: '',
+            }));
+        }
         setLoading(true);
 
         const headers = new Headers();
@@ -50,14 +74,13 @@ const ForgotPasswordScreen = () => {
         const body = new FormData();
         body.append('email', email.toLowerCase());
 
-        fetch(`${BASE_URL}/client/auth/requestPasswordReset`, {
+        fetch(`${FORGOT_PASSWORD}`, {
             method: 'POST',
             headers,
             body,
         })
             .then(response => response.json())
             .then(async result => {
-                console.log(result);
 
                 if (result?.errors) {
                     setErrors(result.errors);
@@ -103,7 +126,7 @@ const ForgotPasswordScreen = () => {
                 navigation.navigate('ChangePasswordForgotEmail', {
                     email: email,
                 });
-                // navigation.goBack();
+
 
                 setLoading(false);
             })
@@ -114,12 +137,9 @@ const ForgotPasswordScreen = () => {
             });
     }
     return (
-        <KeyboardAvoidingView
-            style={{
-                flex: 1,
-                backgroundColor: theme.colors.primary,
-            }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
         >
             <ScrollView
                 contentContainerStyle={{
@@ -127,22 +147,10 @@ const ForgotPasswordScreen = () => {
                 }}
                 keyboardShouldPersistTaps="always"
             >
-                <View>
-                    <IconButton
-                        icon="chevron-left"
-                        iconColor={theme.colors.white}
-                        size={28}
-                        onPress={() => navigation.goBack()}
-                        containerColor={'#FFFFFF78'}
-                    />
-                </View>
+
                 <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
                     <Text
-                        style={{
-                            color: theme.colors.white,
-                            fontSize: 30,
-                            fontWeight: 'bold',
-                        }}
+                        style={[generalStyles.textStyle, { fontSize: 20 }]}
                     >
                         Forgot Password?
                     </Text>
@@ -150,10 +158,7 @@ const ForgotPasswordScreen = () => {
 
                 <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
                     <Text
-                        style={{
-                            color: theme.colors.placeholder,
-                            fontSize: 15,
-                        }}
+                        style={[generalStyles.textStyle]}
                     >
                         Enter your email address. We will send you a link to
                         reset your password
@@ -161,79 +166,40 @@ const ForgotPasswordScreen = () => {
                 </View>
 
                 <View>
-                    <TextInput
-                        label="Email"
-                        mode={'flat'}
-                        style={{
-                            backgroundColor: theme.colors.primary,
-                            borderBottomColor: theme.colors.placeholder,
-                            height: 60,
-                            borderBottomWidth: 0,
-                        }}
-                        theme={{
-                            colors: {
-                                text: theme.colors.white,
-                                primary: theme.colors.white,
-                                secondary: theme.colors.white,
-                                surface: theme.colors.white,
-                            },
-                        }}
-                        right={
-                            emailChecker(email) == false &&
-                            email.length > 0 && (
-                                <TextInput.Icon
-                                    icon={'checkbox-outline'}
-                                    style={{ marginRight: 15, padding: 5 }}
-                                    color={theme.colors.buttonColor}
-                                    size={24}
-                                />
-                            )
-                        }
-                        error={emailChecker(email)}
-                        textColor={theme.colors.white}
-                        value={email}
-                        autoFocus={true}
-                        outlineColor={theme.colors.primary}
-                        underlineColor={theme.colors.disabled}
-                        selectionColor={theme.colors.white}
-                        textContentType="emailAddress"
-                        onChangeText={text => setEmail(text)}
-                    />
-                    {emailChecker(email) && (
-                        <HelperText type="error" visible={true}>
-                            {'Please enter a valid email address'}
-                        </HelperText>
-                    )}
+                    <View style={generalStyles.formContainer}>
+                        <View>
+                            <Text style={generalStyles.formInputTextStyle}>
+                                Email</Text>
+                        </View>
+
+                        <TextInput
+                            style={generalStyles.formInput}
+                            placeholder={'enter email'}
+                            keyboardType="email-address"
+                            placeholderTextColor={COLORS.primaryWhiteHex}
+                            onChangeText={text => setEmail(text)}
+                            value={email}
+                            underlineColorAndroid="transparent"
+                            autoCapitalize="none"
+                        />
+                        <View>
+                            {errors.email && <Text style={generalStyles.errorText}>{errors.email}</Text>}
+                        </View>
+
+                    </View>
 
                     {/* button */}
-                    <View
-                        style={{
-                            marginHorizontal: 40,
-                            marginVertical: 30,
-                            backgroundColor: theme.colors.white,
-                            borderRadius: 20,
-                        }}
-                    >
-                        <Button
-                            mode="contained"
-                            contentStyle={{
-                                flexDirection: 'row-reverse',
-                            }}
-                            loading={loading}
-                            disabled={
-                                email == '' || loading || emailChecker(email)
-                            }
-                            buttonColor={theme.colors.buttonColor}
-                            textColor={theme.colors.primary}
-                            onPress={onForgotPassword}
-                        >
-                            Send
-                        </Button>
-                    </View>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={generalStyles.loginContainer}
+                        onPress={() => onForgotPassword()}>
+                        <Text style={generalStyles.loginText}>{'Send'}</Text>
+                    </TouchableOpacity>
                     {/* button */}
+                    {loading && <ActivityIndicator />}
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };
 
