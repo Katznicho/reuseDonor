@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AuthStack from './authscrens/AuthStack';
+import AuthStack from '../navigators/AuthStack';
 import { useFirebase } from '../hooks/useFirebase';
 import { AppDispatch, RootState } from '../redux/store/dev';
 import { useDispatch, useSelector } from 'react-redux';

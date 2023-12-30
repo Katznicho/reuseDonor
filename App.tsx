@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 import Base from './src/screens/Base';
@@ -10,14 +10,25 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { StatusBar } from 'react-native';
 import { COLORS } from './src/theme/theme';
+import NetInfo from '@react-native-community/netinfo';
+import NoInternet from './src/screens/NoInternet';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  const [connected, setIsConnected] = useState<boolean | null>(false);
+
+  const checkInternet = () => {
+    NetInfo.addEventListener((state: { isConnected: boolean | ((prevState: boolean | null) => boolean | null) | null; }) => {
+      return setIsConnected(state?.isConnected);
+    });
+  };
+
+  useEffect(() => { }, [connected]);
   useEffect(() => {
     SplashScreen.hide();
   }, []);
-  return (
+  return !connected ? (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -30,7 +41,9 @@ const App = () => {
         </PersistGate>
       </Provider>
     </GestureHandlerRootView>
-  );
+  ) : (
+    <NoInternet checkInternet={checkInternet} />
+  )
 };
 
 export default App;

@@ -4,7 +4,7 @@ import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../../theme
 export const generalStyles = StyleSheet.create({
   ScreenContainer: {
     flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
+    backgroundColor: "#F5F7F8",
   },
   ScrollViewFlex: {
     flexGrow: 1,

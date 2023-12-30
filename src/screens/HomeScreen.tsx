@@ -28,6 +28,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
 import { SAVE_DEVICE_INFO } from './utils/constants/routes';
+import { usePostQuery } from '../hooks/usePostQuery';
+import axiosInstance from '../axios/axios';
 
 
 
@@ -37,7 +39,22 @@ const HomeScreen = ({ navigation }: any) => {
 
   const [position, setPosition] = useState<any>(null);
 
-  const [loading, setLoading] = useState(false)
+  const { data, error, isLoading, refetch } = usePostQuery<any>({
+    endpoint: '/auth/hasWalletAccount',
+    params: {
+      "account": "hasWalletAccount"
+    },
+    queryOptions: {
+      enabled: true,
+      refetchInterval: 2000,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+    },
+  })
+
+  console.log(data)
+
+
 
   const [totals, setTotal] = useState<any>(null)
   const [communityTotal, setCommunityTotal] = useState<any>(null)
@@ -46,26 +63,21 @@ const HomeScreen = ({ navigation }: any) => {
 
   let greetings = useShowGreeting()
 
-  const getCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      (pos: any) => {
+  // const getCurrentPosition = () => {
+  //   Geolocation.getCurrentPosition(
+  //     (pos: any) => {
 
-        const { latitude, longitude } = pos.coords;
-        setPosition({ latitude, longitude });
-      },
-      (error: any) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
-      { enableHighAccuracy: true, }
-    );
-  };
+  //       const { latitude, longitude } = pos.coords;
+  //       setPosition({ latitude, longitude });
+  //     },
+  //     (error: any) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
+  //     { enableHighAccuracy: true, }
+  //   );
+  // };
 
-  useEffect(() => {
-    setLoading(true);
-
-    setLoading(false);
-    getCurrentPosition();
-
-
-  }, []);
+  // useEffect(() => {
+  //   getCurrentPosition();
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -153,13 +165,26 @@ const HomeScreen = ({ navigation }: any) => {
 
 
   return (
-    <View style={styles.ScreenContainer}>
+    <View style={generalStyles.ScreenContainer}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}
       >
         {/* App Header */}
-        <HeaderBar />
+        <HeaderBar title={`${greetings} ${user?.fname} !`} />
+
+        {/* wallet button */}
+        {
+          data?.response == "failure" && (<TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('CreateWallet')}
+            style={generalStyles.loginContainer}
+          >
+            <Text style={generalStyles.loginText}>{'Add Wallet'}</Text>
+          </TouchableOpacity>)
+        }
+
+        {/* wallet button */}
         {/* header */}
         <View style={{
           marginVertical: 10,
@@ -167,7 +192,7 @@ const HomeScreen = ({ navigation }: any) => {
           elevation: 5,
           borderRadius: 10,
           paddingBottom: 20,
-          backgroundColor: COLORS.primaryDarkGreyHex
+          backgroundColor: COLORS.primaryBlackHex,
         }} >
           <Text style={{
             fontSize: 20,
@@ -276,10 +301,7 @@ const HomeScreen = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
-  ScreenContainer: {
-    flex: 1,
-    backgroundColor: COLORS.primaryBlackHex,
-  },
+
   ScrollViewFlex: {
     flexGrow: 1,
   },

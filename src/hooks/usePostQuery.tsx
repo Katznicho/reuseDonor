@@ -29,7 +29,7 @@ type QueryOptions = {
   retryDelay?: number; // Number indicating the delay (in milliseconds) between query retries
   onError?: (error: AxiosError) => void; // Function to handle errors returned by the API,
   onSuccess?: (response: AxiosResponse) => void; // Function to handle successful responses from the API
-onSettled?: (data: any, error: AxiosError | null) => void; // Function to handle responses from the API regardless of success or error
+  onSettled?: (data: any, error: AxiosError | null) => void; // Function to handle responses from the API regardless of success or error
 
 };
 
@@ -46,25 +46,31 @@ onSettled?: (data: any, error: AxiosError | null) => void; // Function to handle
  */
 
 
-export  function usePostQuery<T>({ endpoint, params, queryOptions }: ApiParams): ApiResponse<T> {
-    /**
-   * Fetches the data from the API endpoint using Axios
-   * @returns {Promise} A Promise that resolves to the data from the API endpoint
-   * @throws {Error} If there is an error fetching the data
-   */
+export function usePostQuery<T>({ endpoint, params, queryOptions }: ApiParams): ApiResponse<T> {
+  /**
+ * Fetches the data from the API endpoint using Axios
+ * @returns {Promise} A Promise that resolves to the data from the API endpoint
+ * @throws {Error} If there is an error fetching the data
+ */
   const fetcher = async (): Promise<any> => {
     try {
-       //use form data for the passed params
-        const formData = new FormData();
-        for (const key in params) {
-            formData.append(key, params[key]);
-        }
-
-      const {data} = await axiosInstance.post<T>(endpoint, formData);
-      return data;
-    } catch (error:any) {
+      //use form data for the passed params
+      const formData = new FormData();
+      for (const key in params) {
+        formData.append(key, params[key]);
+      }
       
-      throw new Error(error.response?.data?.error || 'There was an error fetching data');
+      //if form 
+
+      // const {data} = await axiosInstance.post<T>(endpoint, formData);
+      const { data } = await axiosInstance.post<T>(endpoint, formData);
+      return data;
+    } catch (error: any) {
+      console.log("==========error================")
+      console.log(error)
+      console.log("==========error================")
+
+      throw new Error(error);
     }
   };
 
@@ -72,16 +78,16 @@ export  function usePostQuery<T>({ endpoint, params, queryOptions }: ApiParams):
    * Calls the useQuery hook to fetch data from the API endpoint
    */
 
-  const { data, isLoading, isError, refetch } = useQuery<T>(endpoint, fetcher,{
+  const { data, isLoading, isError, refetch } = useQuery<T>(endpoint, fetcher, {
     enabled: queryOptions?.enabled,
     refetchOnWindowFocus: queryOptions?.refetchOnWindowFocus,
     refetchOnMount: queryOptions?.refetchOnMount,
     refetchInterval: queryOptions?.refetchInterval,
     retry: queryOptions?.retry,
-    staleTime:queryOptions?.staleTime,
-    cacheTime:queryOptions?.cacheTime
+    staleTime: queryOptions?.staleTime,
+    cacheTime: queryOptions?.cacheTime
   });
-  
+
   return {
     data: data || null,
     error: isError ? new Error('Something went wrong') : null,

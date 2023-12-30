@@ -3,9 +3,6 @@ import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { COLORS } from '../theme/theme';
 import { BlurView } from '@react-native-community/blur';
-import HomeScreen from '../screens/HomeScreen';
-import FavoritesScreen from '../screens/FavoritesScreen';
-import CartScreen from '../screens/CartScreen';
 import CustomIcon from '../components/CustomIcon';
 import { RootState } from '../redux/store/dev';
 import { useSelector } from 'react-redux';
@@ -14,6 +11,7 @@ import MyNotificationStack from '../screens/Notifcations/MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
 import ReuseStack from '../screens/Reuse/ReuseStack';
+import HomeStack from './HomeStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -42,7 +40,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="HomeTab"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon

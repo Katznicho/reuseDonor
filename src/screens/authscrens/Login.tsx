@@ -130,13 +130,18 @@ const Login = () => {
 
             //store the token in the async storage
             AsyncStorage.setItem('token', result?.authToken);
+            //"name": "Katende Nicholas"
+            let name = result.user.name;
+            let firstName = name.split(' ')[0];
+            let lastName = name.split(' ')[1];
+
             dispatch(
               updateUserState({
                 isLoggedIn: true,
                 user: {
                   UID: result?.user.id,
-                  fname: result?.user?.first_name,
-                  lname: result?.user?.last_name,
+                  fname: firstName,
+                  lname: lastName,
                   email: result?.user?.email,
                   phone: result?.user?.phone_number,
                   displayPicture: result?.user?.avatar,
@@ -181,6 +186,7 @@ const Login = () => {
       <KeyboardAwareScrollView
         style={{ flex: 1, width: '100%' }}
         keyboardShouldPersistTaps="always"
+        contentContainerStyle={{ paddingBottom: 50 }}
       >
         {/* login and register */}
         {/* <Text style={styles.title}>{'Login'}</Text> */}

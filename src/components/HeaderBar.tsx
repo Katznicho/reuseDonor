@@ -36,14 +36,15 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title }) => {
 
 const styles = StyleSheet.create({
   HeaderContainer: {
-    padding: SPACING.space_30,
+    paddingHorizontal: SPACING.space_18,
+    paddingVertical: SPACING.space_10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   HeaderText: {
-    fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_20,
+    fontFamily: FONTFAMILY.poppins_light,
+    fontSize: FONTSIZE.size_18,
     color: COLORS.primaryWhiteHex,
   },
 });

@@ -29,9 +29,12 @@ const ChangePasswordForgotEmail = () => {
     const { params } = useRoute<any>();
 
     const [otpCode, setOtpCode] = useState<any>('');
+
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    
     const [loading, setLoading] = useState<boolean>(false);
+
     const [showPassword, setShowPassword] = useState<boolean>(false)
     // Function to toggle the password visibility state 
     const toggleShowPassword = () => { setShowPassword(!showPassword); };
