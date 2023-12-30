@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { generalStyles } from './utils/generatStyles';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -8,6 +8,8 @@ import { ActivityIndicator } from '../components/ActivityIndicator';
 import { showMessage } from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
 import { SETUP_WALLET_ACCOUNT } from './utils/constants/routes';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store/dev';
 
 const CreatePin = () => {
   const [password, setPassword] = useState<string>('');
@@ -15,6 +17,8 @@ const CreatePin = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [errors, setErrors] = useState<any>({});
+  const { user, authToken } = useSelector((state: RootState) => state.user);
+
 
   const navigation = useNavigation<any>()
   // Function to toggle the password visibility state 
@@ -51,6 +55,7 @@ const CreatePin = () => {
       setLoading(true)
       const headers = new Headers();
       headers.append('Accept', 'application/json');
+      headers.append('Authorization', `Bearer ${authToken}`);
 
       const body = new FormData();
       body.append('pin', password);
@@ -94,18 +99,35 @@ const CreatePin = () => {
 
             return setLoading(false);
           }
-          showMessage({
-            message: 'Wallet Account Created',
-            description:
-              'Your can now deposit onto your wallet account',
-            type: 'success',
-            icon: 'success',
-            duration: 3000,
-            autoHide: true,
-          });
-          navigation.goBack();
+          if (result.response == 'success') {
+            showMessage({
+              message: 'Wallet Account Created',
+              description:
+                'Your can now deposit onto your wallet account',
+              type: 'success',
+              icon: 'success',
+              duration: 3000,
+              autoHide: true,
+            });
+            navigation.goBack();
 
-          return setLoading(false);
+            return setLoading(false);
+
+          }
+          else {
+            showMessage({
+              message: 'Failed to create wallet Account',
+              description: 'Please try again',
+              type: 'info',
+              icon: 'info',
+              duration: 3000,
+              autoHide: true,
+            });
+
+            return setLoading(false);
+
+          }
+
         })
         .catch(error => {
           showMessage({
@@ -132,7 +154,7 @@ const CreatePin = () => {
         duration: 3000,
         autoHide: true,
       });
-      setLoading(false);
+      return setLoading(false);
 
     }
 
@@ -192,7 +214,6 @@ const CreatePin = () => {
           </View>
 
         </View>
-
         {/* password */}
         {/* confirm password */}
         <View style={generalStyles.formContainer}>

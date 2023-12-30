@@ -8,4 +8,5 @@ export const RESET_PASSWORD = `${BASE_URL}/auth/resetPassword`;
 export const RESEND_OTP = `${BASE_URL}/auth/resendOTP`
 export const VERIFY_EMAIL = `${BASE_URL}/auth/verifyEmail`
 export const SAVE_DEVICE_INFO = `${BASE_URL}/auth/saveDeviceInfo`
-export const SETUP_WALLET_ACCOUNT = `${BASE_URL}/auth/setUpUserWalletAccount`
+export const SETUP_WALLET_ACCOUNT = `${BASE_URL}/auth/setUpUserWalletAccount`;
+export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`

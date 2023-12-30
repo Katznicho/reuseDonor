@@ -30,6 +30,7 @@ import DeviceInfo from 'react-native-device-info';
 import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 import { usePostQuery } from '../hooks/usePostQuery';
 import axiosInstance from '../axios/axios';
+import UserWallet from '../components/UserWallet';
 
 
 
@@ -51,8 +52,6 @@ const HomeScreen = ({ navigation }: any) => {
       refetchOnMount: true,
     },
   })
-
-  console.log(data)
 
 
 
@@ -91,8 +90,6 @@ const HomeScreen = ({ navigation }: any) => {
         const userAgent = await DeviceInfo.getUserAgent();
         let type = DeviceInfo.getDeviceType();
         const devicePushToken = await messaging().getToken();
-
-
 
         if (
           deviceId &&
@@ -183,38 +180,13 @@ const HomeScreen = ({ navigation }: any) => {
             <Text style={generalStyles.loginText}>{'Add Wallet'}</Text>
           </TouchableOpacity>)
         }
-
         {/* wallet button */}
-        {/* header */}
-        <View style={{
-          marginVertical: 10,
-          marginHorizontal: 15,
-          elevation: 5,
-          borderRadius: 10,
-          paddingBottom: 20,
-          backgroundColor: COLORS.primaryBlackHex,
-        }} >
-          <Text style={{
-            fontSize: 20,
-            marginVertical: 10,
-            fontFamily: FONTFAMILY.poppins_semibold,
-            color: COLORS.primaryWhiteHex,
-            paddingLeft: SPACING.space_30,
-          }}>
-            {greetings} {`${user?.fname} ${user?.lname}`}
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: FONTFAMILY.poppins_medium,
-              color: COLORS.primaryWhiteHex,
-              paddingLeft: SPACING.space_30,
-            }}
-          >
-            {`Your Dashboard   on ${new Date().toDateString()}`}
-          </Text>
 
-        </View>
+        {
+          data?.response == "success" && (<UserWallet />)
+        }
+        {/* header */}
+
 
         <View style={[generalStyles.flexStyles]}>
 
