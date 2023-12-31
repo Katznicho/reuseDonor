@@ -231,7 +231,7 @@ const Donate = () => {
                     activeOpacity={1}
                     style={generalStyles.loginContainer}
                     onPress={() => onDeposit()}>
-                    <Text style={generalStyles.loginText}>{'Deposit'}</Text>
+                    <Text style={generalStyles.loginText}>{'Donate'}</Text>
                 </TouchableOpacity>
                 {/* button */}
                 {loading && <ActivityIndicator />}

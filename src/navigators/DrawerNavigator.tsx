@@ -3,21 +3,20 @@ import TabNavigator from './TabNavigator';
 import { COLORS } from '../theme/theme';
 import CustomIcon from '../components/CustomIcon';
 import PaymentStack from '../screens/payments/PaymentStack';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store/dev';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeliveryStack from '../screens/Delivery/DeliveryStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DrawerContent from '../components/DrawerContent';
 import SupportStack from './SupportStack';
 import AboutUsStack from './AboutUsStack';
+import DonateStack from './DonateStack';
 
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
 
-  const { user } = useSelector((state: RootState) => state.user);
+
 
   return (
     <Drawer.Navigator
@@ -102,6 +101,10 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="AboutUs"
         component={AboutUsStack}
+      />
+      <Drawer.Screen
+        name="Donate"
+        component={DonateStack}
       />
     </Drawer.Navigator>
   )
