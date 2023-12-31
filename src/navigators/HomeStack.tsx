@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { COLORS } from '../theme/theme';
+import MyWebView from '../screens/MyWebView';
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +79,13 @@ const HomeStack = () => {
                 }}>
 
             </Stack.Screen>
+            <Stack.Screen
+                name="MyWebView"
+                component={MyWebView}
+                options={{
+                    headerShown: false
+                }}
+            />
         </Stack.Navigator>
     )
 }

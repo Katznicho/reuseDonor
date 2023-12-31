@@ -11,6 +11,8 @@ import { RootState } from '../redux/store/dev';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeliveryStack from '../screens/Delivery/DeliveryStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DrawerContent from '../components/DrawerContent';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -26,7 +28,7 @@ const DrawerNavigator = () => {
         drawerStatusBarAnimation: 'slide',
         headerShown: false,
         drawerStyle: {
-          backgroundColor: COLORS.primaryBlackHex,
+          backgroundColor: COLORS.primaryLightWhiteGrey,
           borderTopColor: COLORS.primaryBlackHex,
           borderTopWidth: 0,
           width: 250
@@ -47,23 +49,9 @@ const DrawerNavigator = () => {
         drawerActiveTintColor: COLORS.primaryWhiteHex,
         drawerInactiveBackgroundColor: COLORS.primaryBlackHex,
         drawerInactiveTintColor: COLORS.primaryWhiteHex,
-        header: ({ navigation, route, options }) => {
-          return <View
-            style={{
-              marginVertical: 10,
-              // marginHorizontal: 20,
-              borderRadius: 20,
-            }}
-          >
-            <HeadProfileCard />
-            <View>
-              <Text style={[generalStyles.loginText]}>{user.username}</Text>
-            </View>
-
-
-          </View>;
-        }
       }}
+
+      drawerContent={props => <DrawerContent {...props} />}
 
     >
       <Drawer.Screen name="Home"
@@ -79,6 +67,7 @@ const DrawerNavigator = () => {
           ),
         }}
       />
+
       <Drawer.Screen
         name="Payments"
         component={PaymentStack}

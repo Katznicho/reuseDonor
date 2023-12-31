@@ -10,3 +10,6 @@ export const VERIFY_EMAIL = `${BASE_URL}/auth/verifyEmail`
 export const SAVE_DEVICE_INFO = `${BASE_URL}/auth/saveDeviceInfo`
 export const SETUP_WALLET_ACCOUNT = `${BASE_URL}/auth/setUpUserWalletAccount`;
 export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`
+
+//payments
+export const PROCESSORDER = `${BASE_URL}/processOrder`;

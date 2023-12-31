@@ -250,7 +250,7 @@ const UserWallet = () => {
                             name={"chevron-forward-sharp"}
                             size={24}
                             color={COLORS.secondaryGreyHex}
-                        // onPress={navigation.navigate("AllTransactions")}
+                            onPress={() => navigation.navigate("AllTransactions")}
                         />
                     </TouchableOpacity>
 
@@ -265,7 +265,7 @@ const UserWallet = () => {
                         <TouchableOpacity
                             activeOpacity={1}
                             style={[generalStyles.loginContainer, { marginTop: 5, paddingHorizontal: 5, paddingVertical: 5, width: "100%" }]}
-                        // onPress={navigation.navigate("Deposit")}
+                            onPress={() => navigation.navigate("Deposit")}
                         >
                             <Text style={generalStyles.loginText}>{'+ Add Money'}</Text>
                         </TouchableOpacity>

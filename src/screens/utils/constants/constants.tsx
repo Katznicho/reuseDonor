@@ -27,6 +27,12 @@ export const PAYMENT_STATUS = {
     UNPAID:"UNPAID"
 }
 
+export const PAYMENT_TYPE = {
+    "Wallet":"Wallet",
+    "Donation":"Donation",
+    "Product":"Product"
+}
+
 export const APP_NAME = "Reuse";
 
 //firebase collections
