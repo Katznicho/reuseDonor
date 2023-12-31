@@ -1,17 +1,17 @@
 import { } from 'react-native';
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Profile from './Profile';
+import Profile from '../screens/ProfileScreens/Profile';
 import { useNavigation } from '@react-navigation/native';
-import PrivatePolicy from './PrivatePolicy';
-import AboutUs from './AboutUs';
-import { COLORS } from '../../theme/theme';
+import PrivatePolicy from '../screens/ProfileScreens/PrivatePolicy';
+import AboutUs from '../screens/ProfileScreens/AboutUs';
+import { COLORS } from '../theme/theme';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import SupportScreen from './SupportScreen';
-import EditProfile from './EditProfile';
-import { generalStyles } from '../utils/generatStyles';
-import VerificationScreen from './VerificationScreen';
+import SupportScreen from '../screens/ProfileScreens/SupportScreen';
+import EditProfile from '../screens/ProfileScreens/EditProfile';
+import { generalStyles } from '../screens/utils/generatStyles';
+import VerificationScreen from '../screens/ProfileScreens/VerificationScreen';
 
 
 

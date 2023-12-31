@@ -1,17 +1,16 @@
-import { View, Text } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
 import { COLORS } from '../theme/theme';
 import CustomIcon from '../components/CustomIcon';
 import PaymentStack from '../screens/payments/PaymentStack';
-import { generalStyles } from '../screens/utils/generatStyles';
-import HeadProfileCard from '../components/HeadProfileCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store/dev';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeliveryStack from '../screens/Delivery/DeliveryStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DrawerContent from '../components/DrawerContent';
+import SupportStack from './SupportStack';
+import AboutUsStack from './AboutUsStack';
 
 
 const Drawer = createDrawerNavigator();
@@ -94,6 +93,15 @@ const DrawerNavigator = () => {
             />
           ),
         }}
+      />
+      <Drawer.Screen
+        name="Support"
+        component={SupportStack}
+      />
+
+      <Drawer.Screen
+        name="AboutUs"
+        component={AboutUsStack}
       />
     </Drawer.Navigator>
   )
