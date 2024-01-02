@@ -2,7 +2,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
 import { COLORS } from '../theme/theme';
 import CustomIcon from '../components/CustomIcon';
-import PaymentStack from '../screens/payments/PaymentStack';
+import PaymentStack from './PaymentStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeliveryStack from '../screens/Delivery/DeliveryStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

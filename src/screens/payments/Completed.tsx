@@ -1,144 +1,66 @@
-import { FlatList, Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store/dev';
-import { useFirebase } from '../../hooks/useFirebase';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native'
+import React from 'react'
 import { PAYMENT_STATUS } from '../utils/constants/constants';
-import { COLORS } from '../../theme/theme';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
+import useFetchInfinite from '../../hooks/useFetchInfinite';
+import { USERPAYMENTS } from '../utils/constants/routes';
+import { generalStyles } from '../utils/generatStyles';
+import PaymentFlatList from '../../components/PaymentFlatList';
 
 
 const Completed = () => {
-    const { user } = useSelector((state: RootState) => state.user);
+
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(PAYMENT_STATUS.COMPLETED, USERPAYMENTS, PAYMENT_STATUS.COMPLETED);
+    console.log("=========== data=========================")
+    console.log(data?.pages[0].total)
+    console.log("==========data=====================")
 
 
-    const { getPaymentsByUserIdAndStatus } = useFirebase();
-    const navigation = useNavigation<any>();
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [payments, setPayments] = useState<any[]>([]);
 
-    useEffect(() => {
-        setLoading(true);
-        getPaymentsByUserIdAndStatus(user.UID, PAYMENT_STATUS.COMPLETED).then((userpayments) => {
-            setPayments(userpayments)
-        }).catch((error) => {
-        })
-        setLoading(false);
-    })
+
+
+
+
+
+    //flat the data
+    // const flattenedData = data?.pages.flatMap(page => page.results) || [];
+    const paymentData = data?.pages.flatMap(page => page.data);
+
+    console.log("=============payment data length==========================")
+    console.log(paymentData?.length);
+
+
+
+
+
+    const loadMoreData = () => {
+        if (hasNextPage && !isFetching && data?.pages[0].total !== paymentData?.length) return fetchNextPage()
+    };
+
+
+    console.log("====================================")
+    console.log(hasNextPage)
+    console.log("===============================")
+
+
 
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: COLORS.primaryBlackHex,
-            }}
-        >
+        <SafeAreaView style={[generalStyles.ScreenContainer]}>
             {
-                payments.length > 0 ?
-                    <FlatList
-                        data={payments}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={item => String(item.id)}
-                        renderItem={({ item, index }) => (
-                            <Pressable style={styles.container} key={index}
-                                onPress={() => navigation.navigate('PaymentDetails', {
-                                    item
-                                })}
-                            >
-                                <View>
-                                    {/* icon */}
-                                    <Image
-                                        source={require("../../assets/images/reuse.png")}
-                                        style={{
-                                            width: 60,
-                                            height: 60,
-                                            borderRadius: 20,
-                                        }}
-                                    />
-                                </View>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        flex: 1,
-                                        marginHorizontal: 10,
-                                        marginTop: 10,
-                                    }}
-                                >
-
-                                    <Text style={styles.date}>{item?.productName}</Text>
-                                    <Text style={styles.status}>{item?.paidTo}</Text>
-                                    <Text style={styles.status}>{item?.paymentMethod}</Text>
-                                    <Text style={styles.status}>{item?.status}</Text>
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    {/* amount details */}
-                                    <View>
-                                        <Text style={styles.status}>{item?.totalAmount}</Text>
-                                    </View>
-                                    {/* amoun details */}
-                                </View>
-                                <Pressable>
-                                    {/* add chevron icon */}
-                                    <Ionicons
-                                        name="chevron-forward"
-                                        size={24}
-                                        color={COLORS.primaryBlackHex}
-                                    />
-                                    {/* icon */}
-                                </Pressable>
-                            </Pressable>
-                        )}
-                    />
-
-                    :
-                    <View >
-                        <EmptyListAnimation title={'You dont have any completed payments'} />
-
-
-                    </View>
-
+                data && paymentData?.length === 0 && <EmptyListAnimation
+                    title={'No Completed  Transactions'} />
             }
+            <PaymentFlatList
+                paymentData={paymentData}
+                loadMoreData={loadMoreData}
+                isFetching={isFetching}
+            />
 
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
 export default Completed
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: COLORS.primaryWhiteHex,
-        borderRadius: 8,
-        padding: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        elevation: 5,
-        margin: 5,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center',
-    },
-
-    date: {
-        fontSize: 12,
-        color: COLORS.primaryBlackHex,
-        marginVertical: 2,
-    },
-    status: {
-        fontSize: 12,
-        color: 'gray',
-        marginVertical: 2,
-    },
-});

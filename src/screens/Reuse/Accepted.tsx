@@ -3,148 +3,77 @@ import {
     Text,
     View,
     SafeAreaView,
-    FlatList,
-    Pressable,
-    Image,
     TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { useFirebase } from '../../hooks/useFirebase';
-import { ActivityIndicator } from '../../components/ActivityIndicator';
-import { useNavigation } from '@react-navigation/native';
-import EmptyListAnimation from '../../components/EmptyListAnimation';
+import React from 'react';
 import { COLORS } from '../../theme/theme';
-import { RootState } from '../../redux/store/dev';
-import { limitDescription } from '../utils/helpers/helpers';
+import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
+import ProductFlatlist from '../../components/ProductFlatlist';
+import { useNavigation } from '@react-navigation/native';
+import useFetchInfinite from '../../hooks/useFetchInfinite';
+import { USERPRODUCTS } from '../utils/constants/routes';
+import { PRODUCT_STATUS } from '../utils/constants/constants';
+
+
 
 //https://wix.github.io/react-native-ui-lib/docs/components/overlays/FeatureHighlight
 //tamagui
 
 const Accepted = () => {
-    const { user } = useSelector((state: RootState) => state.user);
-    const { getProductsByUserIdAndStatus } = useFirebase();
-    const [products, setProducts] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-
-
 
     const navigation = useNavigation<any>();
 
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${PRODUCT_STATUS.ACCEPTED}PRODUCTS `, USERPRODUCTS, PRODUCT_STATUS.ACCEPTED);
+    console.log("=========== data=========================")
+    console.log(data?.pages[0].total)
+    console.log("==========data=====================")
 
 
+    //flat the data
+    // const flattenedData = data?.pages.flatMap(page => page.results) || [];
+    const productData = data?.pages.flatMap(page => page.data);
 
-    useEffect(() => {
-        setLoading(true);
-        getProductsByUserIdAndStatus(user.UID, "ACCEPTED").then((userproducts) => {
-            setProducts(userproducts)
-        }).catch((error) => {
-        })
-        setLoading(false);
-    }, [user?.UID]);
+    console.log("=============payment data length==========================")
+    console.log(productData?.length);
 
 
+    const loadMoreData = () => {
+        if (hasNextPage && !isFetching && data?.pages[0].total !== productData?.length) return fetchNextPage()
+    };
 
-    if (loading) return <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primaryBlackHex }}>
-        <ActivityIndicator />
-    </SafeAreaView>
+
+    console.log("====================================")
+    console.log(hasNextPage)
+    console.log("===============================")
+
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: COLORS.primaryBlackHex,
-            }}
-        >
-
+        <SafeAreaView style={[generalStyles.ScreenContainer]} >
 
             {
-                products.length ?
-                    <FlatList
-                        data={products}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={item => String(item.id)}
-                        renderItem={({ item, index }) => (
-                            <Pressable
-                                style={styles.container} key={index}
-                                onPress={() => navigation.navigate('MyProductDetails', {
-                                    item
-                                })}
-                            >
-                                <View>
-                                    {/* icon */}
-                                    <Image
-                                        source={{
-                                            uri: item?.coverImage,
-                                        }}
-                                        style={{
-                                            width: 60,
-                                            height: 60,
-                                            borderRadius: 10,
-                                        }}
-                                    />
-                                </View>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        flex: 1,
-                                        marginHorizontal: 10,
-                                        marginTop: 10,
-                                    }}
-                                >
-
-                                    <Text style={styles.date}>{item?.title}</Text>
-                                    <Text style={styles.status}>{item?.estimatedPickUp}</Text>
-                                    <Text style={styles.date}>{limitDescription(item?.description, 15)}</Text>
-
-
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    {/* amount details */}
-                                    <View>
-                                        <Text style={styles.status}>{item?.status}</Text>
-                                    </View>
-                                    {/* amoun details */}
-                                </View>
-                                <Pressable>
-                                    {/* add chevron icon */}
-                                    <Ionicons
-                                        name="chevron-forward"
-                                        size={24}
-                                        color={COLORS.primaryBlackHex}
-                                    />
-                                    {/* icon */}
-                                </Pressable>
-                            </Pressable>
-                        )}
+                data && productData?.length === 0 && <View style={[generalStyles.centerContent]} >
+                    <EmptyListAnimation
+                        title={'You dont have any products'}
                     />
+                    <View>
 
-                    :
-                    <View style={[generalStyles.centerContent]} >
-                        <EmptyListAnimation
-                            title={'You dont have any accepted products'}
-                        />
-                        <View>
-
-                            <TouchableOpacity
-                                style={generalStyles.loginContainer}
-                                onPress={() => navigation.navigate('Create')}
-                            >
-                                <Text style={generalStyles.loginText}>{'Create Products'}</Text>
-                            </TouchableOpacity>
-                        </View>
-
+                        <TouchableOpacity
+                            style={generalStyles.loginContainer}
+                            onPress={() => navigation.navigate('Create')}
+                        >
+                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
+                        </TouchableOpacity>
                     </View>
 
+                </View>
             }
 
+            <ProductFlatlist
+                productData={productData}
+                loadMoreData={loadMoreData}
+                isFetching={isFetching}
+            />
 
         </SafeAreaView>
     );
@@ -179,4 +108,14 @@ const styles = StyleSheet.create({
         color: 'gray',
         marginVertical: 2,
     },
+    statusActive: {
+        fontSize: 12,
+        color: 'green',
+        marginVertical: 2,
+    },
+    statusRejected: {
+        fontSize: 12,
+        color: 'red',
+        marginVertical: 2,
+    }
 });

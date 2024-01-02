@@ -10,7 +10,7 @@ import ProfileStack from './ProfileStack';
 import MyNotificationStack from '../screens/Notifcations/MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
-import ReuseStack from '../screens/Reuse/ReuseStack';
+import ReuseStack from './ReuseStack';
 import HomeStack from './HomeStack';
 
 

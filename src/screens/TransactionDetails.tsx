@@ -4,43 +4,39 @@ import {
     View,
     SafeAreaView,
     ScrollView,
-    Pressable,
-    Image,
+
     Dimensions
 } from 'react-native';
 import React from 'react';
 import { useRoute } from '@react-navigation/native';
-import { COLORS } from '../../theme/theme';
-import { generalStyles } from '../utils/generatStyles';
-import { convertFirebaseTimestampToReadableDate } from '../utils/helpers/helpers';
-import { useFirebase } from '../../hooks/useFirebase';
+import { generalStyles } from './utils/generatStyles';
+import { COLORS } from '../theme/theme';
+
 
 const { width } = Dimensions.get('window');
 
-const PaymentDetails = () => {
+const TransactionDetails = () => {
     const { item } = useRoute<any>().params;
-
-
-
-
 
 
     return (
         <SafeAreaView style={generalStyles.ScreenContainer}>
             <ScrollView
                 showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}>
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 100 }}
+            >
                 <View style={styles.cardViewStyles}>
                     <Text
                         style={{
                             color: COLORS.primaryWhiteHex,
                             padding: 2,
                         }}>
-                        Product Name
+                        Payment Type
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.productName}
+                        {item?.type}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -66,11 +62,11 @@ const PaymentDetails = () => {
                             color: COLORS.primaryWhiteHex,
                             padding: 2,
                         }}>
-                        Total Amount
+                        Amount
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.totalAmount}
+                        UGX  {item?.amount}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -81,11 +77,30 @@ const PaymentDetails = () => {
                             color: COLORS.primaryWhiteHex,
                             padding: 2,
                         }}>
-                        Paid By
+                        Payment Method
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {`${item?.owner?.firstName} ${item?.owner?.lastName}`}
+                        {/* {`${item?.owner?.firstName} ${item?.owner?.lastName}`}
+                         */}
+                        {item?.payment_method}
+                    </Text>
+                    <View style={[styles.bottom]} />
+                </View>
+
+                <View style={styles.cardViewStyles}>
+                    <Text
+                        style={{
+                            color: COLORS.primaryWhiteHex,
+                            padding: 2,
+                        }}>
+                        Payment Mode
+                    </Text>
+                    <Text
+                        style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
+                        {/* {`${item?.owner?.firstName} ${item?.owner?.lastName}`}
+                         */}
+                        {item?.payment_mode}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -118,7 +133,7 @@ const PaymentDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryLightGreyHex, padding: 5 }}>
-                        {convertFirebaseTimestampToReadableDate(item.createdAt)}
+                        {item.updated_at}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -129,7 +144,7 @@ const PaymentDetails = () => {
     );
 };
 
-export default PaymentDetails;
+export default TransactionDetails;
 
 const styles = StyleSheet.create({
     nameStyle: {

@@ -2,11 +2,12 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import PaymentTabs from './PaymentTabs';
-import PaymentDetails from './PaymentDetails';
+import PaymentTabs from '../screens/payments/PaymentTabs';
+import PaymentDetails from '../screens/payments/PaymentDetails';
 import { TouchableOpacity } from 'react-native';
-import { COLORS } from '../../theme/theme';
+import { COLORS } from '../theme/theme';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { generalStyles } from '../screens/utils/generatStyles';
 
 
 
@@ -36,13 +37,12 @@ function PaymentStack() {
                 options={{
                     title: 'My Payments',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex,
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 30,
-                    },
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
+                    headerTintColor: COLORS.primaryBlackHex,
+
                     headerLeft: () => (
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
@@ -50,7 +50,7 @@ function PaymentStack() {
                         >
                             <Entypo
                                 name="chevron-left"
-                                color={COLORS.primaryWhiteHex}
+                                color={COLORS.primaryBlackHex}
                                 size={28}
                             />
                         </TouchableOpacity>

@@ -217,14 +217,16 @@ const UserWallet = () => {
 
             </Dialog>
             {/* dialog */}
-            <View style={{
+            <View 
+            style={{
                 marginVertical: 10,
                 marginHorizontal: 15,
                 elevation: 5,
                 borderRadius: 10,
                 paddingBottom: 20,
                 backgroundColor: COLORS.primaryBlackHex,
-            }} >
+            }} 
+            >
                 <View style={[generalStyles.flexStyles, { alignItems: "center", justifyContent: "space-between", marginHorizontal: 5 }]}>
                     <View style={[generalStyles.flexStyles, { alignItems: "center", justifyContent: "center" }]}>
                         <Text style={[styles.avaialableText]}>
@@ -242,7 +244,7 @@ const UserWallet = () => {
 
                     <TouchableOpacity
                         activeOpacity={1}
-                        // onPress={navigation.navigate("AllTransactions")}
+                        onPress={() => navigation.navigate("AllTransactions")}
                         style={[generalStyles.flexStyles, { alignItems: "center", justifyContent: "space-between" }]}
                     >
                         <Text style={[styles.avaialableText]}>Transaction History</Text>

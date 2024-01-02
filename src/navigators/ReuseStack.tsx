@@ -2,13 +2,13 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import ReuseTabs from './ReuseTabs';
-import MyProductDetails from './MyProductDetails';
-import PaymentSummary from './PaymentSummary';
-import DeliveryDetails from './DeliveryDetails';
-import { COLORS } from '../../theme/theme';
+import ReuseTabs from '../screens/Reuse/ReuseTabs';
+import MyProductDetails from '../screens/Reuse/MyProductDetails';
+import PaymentSummary from '../screens/Reuse/PaymentSummary';
+import DeliveryDetails from '../screens/Reuse/DeliveryDetails';
+import { COLORS } from '../theme/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { generalStyles } from '../utils/generatStyles';
+import { generalStyles } from '../screens/utils/generatStyles';
 import Entypo from "react-native-vector-icons/Entypo";
 import { StyleSheet } from 'react-native';
 
@@ -40,13 +40,12 @@ function ReuseStack() {
                 options={{
                     title: 'My Products',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex,
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 30,
-                    },
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
+                    headerTintColor: COLORS.primaryBlackHex,
+
                     headerLeft: () => (
 
                         <TouchableOpacity
@@ -55,7 +54,7 @@ function ReuseStack() {
                         >
                             <Entypo
                                 name="chevron-left"
-                                color={COLORS.primaryWhiteHex}
+                                color={COLORS.primaryBlackHex}
                                 size={28}
                             />
 

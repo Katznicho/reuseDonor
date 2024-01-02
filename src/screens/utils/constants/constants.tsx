@@ -14,23 +14,23 @@ export const APP_USERS = {
 }
 
 export const PRODUCT_STATUS = {
-    ACCEPTED: "ACCEPTED",
-    PENDING: "PENDING",
-    REJECTED: "REJECTED",
+    ACCEPTED: "Accepted",
+    PENDING: "Pending",
+    REJECTED: "Rejected",
 
 }
 
 export const PAYMENT_STATUS = {
-    PENDING: "pending",
-    COMPLETED: "successful",
-    CANCELLED: "Cancelled",
-    UNPAID:"UNPAID"
+    PENDING: "Pending",
+    COMPLETED: "Completed",
+    CANCELLED: "Failed",
+    UNPAID: "UNPAID"
 }
 
 export const PAYMENT_TYPE = {
-    "Wallet":"Wallet",
-    "Donation":"Donation",
-    "Product":"Product"
+    "Wallet": "Wallet",
+    "Donation": "Donation",
+    "Product": "Product"
 }
 
 export const APP_NAME = "Reuse";

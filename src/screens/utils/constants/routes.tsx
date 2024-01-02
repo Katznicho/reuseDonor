@@ -13,3 +13,7 @@ export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`
 
 //payments
 export const PROCESSORDER = `${BASE_URL}/processOrder`;
+export const USERPAYMENTS = `${BASE_URL}/getUserPayments`;
+export const USERPRODUCTS = `${BASE_URL}/getUserProducts`
+export const USERDELIVERIES = `${BASE_URL}/getUserDelivries`
+export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications` 
