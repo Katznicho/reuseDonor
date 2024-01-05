@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
+import {  StyleSheet } from "react-native";
 import { BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING } from "../../theme/theme";
 
 export const generalStyles = StyleSheet.create({

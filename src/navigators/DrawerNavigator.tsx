@@ -4,7 +4,7 @@ import { COLORS } from '../theme/theme';
 import CustomIcon from '../components/CustomIcon';
 import PaymentStack from './PaymentStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import DeliveryStack from '../screens/Delivery/DeliveryStack';
+import DeliveryStack from './DeliveryStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DrawerContent from '../components/DrawerContent';
 import SupportStack from './SupportStack';

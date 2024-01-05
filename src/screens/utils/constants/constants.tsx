@@ -20,11 +20,21 @@ export const PRODUCT_STATUS = {
 
 }
 
+export const DELIVERY_STATUS = {
+    ACCEPTED: "Accepted",
+    PENDING: "Pending",
+    REJECTED: "Rejected",
+
+
+}
+
 export const PAYMENT_STATUS = {
     PENDING: "Pending",
     COMPLETED: "Completed",
     CANCELLED: "Failed",
-    UNPAID: "UNPAID"
+    UNPAID: "UNPAID",
+    CONFIRMED: "Confirmed",
+    UNCONFIRMED: "UnConfirmed"
 }
 
 export const PAYMENT_TYPE = {

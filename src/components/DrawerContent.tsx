@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Linking } from 'react-native'
 import React, { useState } from 'react';
 import {
     DrawerContentScrollView,
@@ -288,6 +288,34 @@ const DrawerContent = (props: any) => {
                         inactiveTintColor={COLORS.primaryWhiteHex}
                     />
                     {/* support */}
+
+                    {/* website */}
+                    <DrawerItem
+                        label="Website"
+                        icon={() => <MaterialCommunityIcons
+                            name="web"
+                            size={25}
+                            color={COLORS.primaryWhiteHex}
+                        />
+                        }
+                        onPress={() => {
+                            setSelectedItem('Website');
+                            Linking.openURL('https://reuseug.risidev.com');
+                        }}
+                        style={[{
+                            backgroundColor:
+                                selectedItem === 'Support'
+                                    ? COLORS.primaryOrangeHex
+                                    : COLORS.primaryBlackHex,
+
+                        }, styles.tabStyles]}
+                        labelStyle={styles.labelStyle}
+                        activeBackgroundColor={COLORS.primaryOrangeHex}
+                        activeTintColor={COLORS.primaryWhiteHex}
+                        inactiveBackgroundColor={COLORS.primaryBlackHex}
+                        inactiveTintColor={COLORS.primaryWhiteHex}
+                    />
+                    {/* website */}
 
                     {/* about us */}
                     <DrawerItem

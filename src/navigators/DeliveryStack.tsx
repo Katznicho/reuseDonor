@@ -1,10 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { COLORS } from '../../theme/theme';
-import DeliveryDetails from './DeliveryDetails';
-import AllDetails from './AllDetails';
-import DeliveryTabs from './DeliveryTabs';
+import { COLORS } from '../theme/theme';
+import DeliveryDetails from '../screens/Delivery/DeliveryDetails';
+import DeliveryTabs from '../screens/Delivery/DeliveryTabs';
+import { generalStyles } from '../screens/utils/generatStyles';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,13 +19,12 @@ const DeliveryStack = () => {
                 options={{
                     title: 'Deliveries',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 25,
-                    },
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTintColor: COLORS.primaryBlackHex,
+
                 }}
             />
 
@@ -51,4 +49,3 @@ const DeliveryStack = () => {
 
 export default DeliveryStack
 
-const styles = StyleSheet.create({})
