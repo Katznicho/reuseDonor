@@ -1,144 +1,92 @@
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Pressable, Image } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store/dev';
-import { useFirebase } from '../../hooks/useFirebase';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../theme/theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+    Text,
+    View,
+    SafeAreaView,
+    TouchableOpacity,
+} from 'react-native';
+import React from 'react';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
+import { generalStyles } from '../utils/generatStyles';
+import ProductFlatlist from '../../components/ProductFlatlist';
+import { useNavigation } from '@react-navigation/native';
+import useFetchInfinite from '../../hooks/useFetchInfinite';
+import { DELIVERY_STATUS } from '../utils/constants/constants';
+import { USERDELIVERIES } from '../utils/constants/routes';
+
+
+
+//https://wix.github.io/react-native-ui-lib/docs/components/overlays/FeatureHighlight
+//tamagui
 
 const Completed = () => {
 
-    const { user } = useSelector((state: RootState) => state.user);
-
-    const { getDeliveryDetailsByStatus } = useFirebase();
     const navigation = useNavigation<any>();
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [delivery, setDelivery] = useState<any[]>([]);
+    const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.COMPLETED} DELIVERY `, USERDELIVERIES, DELIVERY_STATUS.COMPLETED);
+    console.log("=========== data=========================")
+    console.log(data?.pages[0].total)
+    console.log("==========data=====================")
 
-    useEffect(() => {
-        setLoading(true);
-        getDeliveryDetailsByStatus(user.UID, 'COMPLETED').then((userDeliveries) => {
-            setDelivery(userDeliveries)
-        }).catch((error) => {
-        })
-        setLoading(false);
-    }, [])
+
+
+
+
+
+
+
+
+    //flat the data
+    // const flattenedData = data?.pages.flatMap(page => page.results) || [];
+    const productData = data?.pages.flatMap(page => page.data);
+
+    console.log("=============payment data length==========================")
+    console.log(productData?.length);
+
+
+
+
+
+    const loadMoreData = () => {
+        if (hasNextPage && !isFetching && data?.pages[0].total !== productData?.length) return fetchNextPage()
+    };
+
+
+    console.log("====================================")
+    console.log(hasNextPage)
+    console.log("===============================")
+
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: COLORS.primaryBlackHex,
-            }}
-        >
+        <SafeAreaView style={[generalStyles.ScreenContainer]} >
+
             {
-                delivery.length > 0 ?
-                    <FlatList
-                        data={delivery}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={item => String(item.id)}
-                        renderItem={({ item, index }) => (
-                            <Pressable style={styles.container} key={index}
-                                onPress={() => navigation.navigate('DeliveryDetails', {
-                                    item
-                                })}
-                            >
-                                <View>
-                                    {/* icon */}
-                                    <Image
-                                        source={{
-                                            uri: item?.product?.coverImage
-                                        }}
-                                        style={{
-                                            width: 60,
-                                            height: 60,
-                                            borderRadius: 20,
-                                        }}
-                                    />
-                                </View>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        flex: 1,
-                                        marginHorizontal: 10,
-                                        marginTop: 10,
-                                    }}
-                                >
-
-                                    <Text style={styles.date}>{item?.product?.title}</Text>
-                                    {/* <Text style={styles.status}>{item?.deliveryDate}</Text>
-                                    <Text style={styles.status}>{item?.pickUpDate}</Text> */}
-                                    <Text style={styles.status}>{item?.status}</Text>
-                                    <Text style={styles.status}>{item?.isConfirmed ? 'Confirmed' : 'Pending Confirmation'}</Text>
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    {/* amount details */}
-                                    <View>
-                                        <Text style={styles.status}>{item?.receiver.communityName}</Text>
-                                    </View>
-                                    {/* amoun details */}
-                                </View>
-                                <Pressable>
-                                    {/* add chevron icon */}
-                                    <Ionicons
-                                        name="chevron-forward"
-                                        size={24}
-                                        color={COLORS.primaryBlackHex}
-                                    />
-                                    {/* icon */}
-                                </Pressable>
-                            </Pressable>
-                        )}
+                data && productData?.length === 0 && <View style={[generalStyles.centerContent]} >
+                    <EmptyListAnimation
+                        title={'You dont have any completed    deliveries'}
                     />
+                    <View>
 
-                    :
-                    <View >
-                        <EmptyListAnimation title={'You dont have any completed delivery yet'} />
-
-
+                        <TouchableOpacity
+                            style={generalStyles.loginContainer}
+                            onPress={() => navigation.navigate('Create')}
+                        >
+                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
+                        </TouchableOpacity>
                     </View>
 
+                </View>
             }
 
+            <ProductFlatlist
+                productData={productData}
+                loadMoreData={loadMoreData}
+                isFetching={isFetching}
+            />
+
         </SafeAreaView>
-    )
-}
+    );
+};
 
-export default Completed
+export default  Completed;
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: COLORS.primaryWhiteHex,
-        borderRadius: 8,
-        padding: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        elevation: 5,
-        margin: 5,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center',
-    },
 
-    date: {
-        fontSize: 12,
-        color: COLORS.primaryBlackHex,
-        marginVertical: 2,
-    },
-    status: {
-        fontSize: 12,
-        color: 'gray',
-        marginVertical: 2,
-    },
-});

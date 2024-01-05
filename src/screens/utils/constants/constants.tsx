@@ -21,9 +21,10 @@ export const PRODUCT_STATUS = {
 }
 
 export const DELIVERY_STATUS = {
-    ACCEPTED: "Accepted",
+    COMPLETED: "Completed",
     PENDING: "Pending",
-    REJECTED: "Rejected",
+    CONFIRMED: "Confirmed",
+    UNCONFIRMED: "Unconfirmed"
 
 
 }

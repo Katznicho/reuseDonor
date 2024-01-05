@@ -91,41 +91,4 @@ const Rejected = () => {
 
 export default Rejected;
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: COLORS.primaryWhiteHex,
-        borderRadius: 8,
-        padding: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        elevation: 5,
-        margin: 5,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center',
-    },
 
-    date: {
-        fontSize: 12,
-        color: COLORS.primaryBlackHex,
-        marginVertical: 2,
-    },
-    status: {
-        fontSize: 12,
-        color: 'gray',
-        marginVertical: 2,
-    },
-    statusActive: {
-        fontSize: 12,
-        color: 'green',
-        marginVertical: 2,
-    },
-    statusRejected: {
-        fontSize: 12,
-        color: 'red',
-        marginVertical: 2,
-    }
-});
