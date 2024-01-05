@@ -7,7 +7,7 @@ import CustomIcon from '../components/CustomIcon';
 import { RootState } from '../redux/store/dev';
 import { useSelector } from 'react-redux';
 import ProfileStack from './ProfileStack';
-import MyNotificationStack from '../screens/Notifcations/MyNotificationStack';
+import MyNotificationStack from './MyNotificationStack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CreateDonationProduct from '../screens/CreateScreens/CreateDonationProduct';
 import ReuseStack from './ReuseStack';

@@ -1,8 +1,10 @@
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import Recent from './Recent';
-import { COLORS } from '../../theme/theme';
+import Recent from '../screens/Notifcations/Recent';
+import All from '../screens/Notifcations/All';
+import { COLORS } from '../theme/theme';
+import { generalStyles } from '../screens/utils/generatStyles';
 
 
 const Stack = createNativeStackNavigator();
@@ -18,7 +20,7 @@ const MyNotificationStack = (): JSX.Element => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Recent"
+      initialRouteName="All"
     >
 
       <Stack.Screen
@@ -27,13 +29,11 @@ const MyNotificationStack = (): JSX.Element => {
         options={{
           title: 'Notifications',
           headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
+            backgroundColor: COLORS.primaryOrangeHex
           },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
+          headerTitleStyle: generalStyles.titleHeaderStyles,
           headerTitleAlign: 'center',
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerTintColor: COLORS.primaryBlackHex,
         }}
 
       />
@@ -44,30 +44,26 @@ const MyNotificationStack = (): JSX.Element => {
         options={{
           title: 'Notifications',
           headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
+            backgroundColor: COLORS.primaryOrangeHex
           },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
+          headerTitleStyle: generalStyles.titleHeaderStyles,
           headerTitleAlign: 'center',
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerTintColor: COLORS.primaryBlackHex,
         }}
 
       />
 
       <Stack.Screen
         name="All"
-        component={Recent}
+        component={All}
         options={{
           title: 'Notifications',
           headerStyle: {
-            backgroundColor: COLORS.primaryBlackHex,
+            backgroundColor: COLORS.primaryOrangeHex
           },
-          headerTitleStyle: {
-            fontSize: 25,
-          },
+          headerTitleStyle: generalStyles.titleHeaderStyles,
           headerTitleAlign: 'center',
-          headerTintColor: COLORS.primaryWhiteHex,
+          headerTintColor: COLORS.primaryBlackHex,
         }}
 
       />
