@@ -16,4 +16,26 @@ export const PROCESSORDER = `${BASE_URL}/processOrder`;
 export const USERPAYMENTS = `${BASE_URL}/getUserPayments`;
 export const USERPRODUCTS = `${BASE_URL}/getUserProducts`
 export const USERDELIVERIES = `${BASE_URL}/getUserDelivries`
-export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications` 
+export const USERNOTIFICATIONS = `${BASE_URL}/getUserNotifications`
+
+
+
+//community 
+export const GET_COMMUNITY_DETAILS = `${BASE_URL}/getCommunityDetails`
+export const GET_COMMUNITY_TOTALS = `${BASE_URL}/getCommunityTotals`
+export const GET_COMMUNITIES = `${BASE_URL}/getCommunitysByPage`
+export const GET_ALL_COMMUNITIES = `${BASE_URL}/getAllAvailableCommunities`
+
+
+//donor
+export const GET_DONORS = `${BASE_URL}/getDonorsByPage`
+export const GET_DONOR_DETAILS = `${BASE_URL}/getDonorDetails`
+export const GET_DONOR_TOTALS = `${BASE_URL}/getDonorTotals`
+
+
+//produucts 
+export const CREATE_PRODUCT = `${BASE_URL}/createProduct`
+
+
+//categories
+export const GET_ALL_CATEGORIES = `${BASE_URL}/getAllProductCategories`

@@ -89,7 +89,6 @@ const CreateDonationProduct = () => {
         isNegotiable: false,
         isFree: true,
         isDonation: true,
-        isExchange: false,
         isDeliveryAvailable: false,
         isDeliveryFeeCovered: false,
         isPickupAvailable: false,
@@ -99,14 +98,9 @@ const CreateDonationProduct = () => {
         isProductRefurbished: false,
         isProductDamaged: false,
         damageDescription: "",
-        receiverCommunity: "",
         estimatedPickUp: "",
-        status: "PENDING",
         isDeliverySet: false,
-        paymentId: "",
-        paymnetStatus: "",
-        reason: "",
-        totalAmount: ""
+    
 
     });
 

@@ -31,6 +31,7 @@ import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 import { usePostQuery } from '../hooks/usePostQuery';
 import axiosInstance from '../axios/axios';
 import UserWallet from '../components/UserWallet';
+import Totals from '../components/Totals';
 
 
 
@@ -90,6 +91,8 @@ const HomeScreen = ({ navigation }: any) => {
         const userAgent = await DeviceInfo.getUserAgent();
         let type = DeviceInfo.getDeviceType();
         const devicePushToken = await messaging().getToken();
+
+        console.log('devicePushToken', devicePushToken);
 
         if (
           deviceId &&
@@ -186,6 +189,11 @@ const HomeScreen = ({ navigation }: any) => {
           data?.response == "success" && (<UserWallet />)
         }
         {/* header */}
+
+
+        {/* totals */}
+        <Totals />
+        {/* totals */}
 
 
         <View style={[generalStyles.flexStyles]}>
