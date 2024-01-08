@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'rea
 import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import UploadComponent from '../../components/UploadComponent';
-import { COLORS } from '../../theme/theme';
+import { COLORS, FONTFAMILY } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 
 
@@ -40,6 +40,11 @@ const ProductImages = ({
     return (
         <View>
 
+            <View>
+                <Text style={[generalStyles.formInputTextStyle, { marginHorizontal: 10 }]}>
+                    Product Cover Image
+                </Text>
+            </View>
             {
                 imagePath ? (<View>
                     <TouchableOpacity
@@ -83,6 +88,15 @@ const ProductImages = ({
 
                 </TouchableOpacity>)
             }
+            <View>
+                <Text style={[generalStyles.formInputTextStyle, { marginHorizontal: 10 }]}>
+                    Product Images
+                </Text>
+                <Text style={{ color: COLORS.primaryWhiteHex, marginHorizontal: 10, fontFamily: FONTFAMILY.poppins_thin }}>
+                    Add at least 4 images to proceed. Please upload images in high quality.Click Upload button after you have added images  then click next.
+
+                </Text>
+            </View>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 

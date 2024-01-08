@@ -260,18 +260,20 @@ const CreateDonationProduct = () => {
             body.append('category_id', productDetials.category);
             body.append('price', productDetials.price);
             body.append('cover_image', productDetials.coverImage);
-            body.append("images", productDetials.images);
-            body.append('is_delivery_available', productDetials.isDeliveryAvailable);
-            body.append('is_pickup_available', productDetials.isPickupAvailable);
-            body.append('is_free', productDetials.isFree);
-            body.append("is_product_new", productDetials.isProductNew);
-            body.append("is_product_damaged", productDetials.isProductDamaged);
-            body.append("is_product_available_for_all", productDetials.isProductAvailableForAll);
+            productDetials.images.forEach((image: any) => {
+                body.append("images[]", image);
+            })
+            body.append('is_delivery_available', productDetials.isDeliveryAvailable ? 1 : 0);
+            body.append('is_pickup_available', productDetials.isPickupAvailable ? 1 : 0);
+            body.append('is_free', productDetials.isFree ? 1 : 0);
+            body.append("is_product_new", productDetials.isProductNew ? 1 : 0);
+            body.append("is_product_damaged", productDetials.isProductDamaged ? 1 : 0);
+            body.append("is_product_available_for_all", productDetials.isProductAvailableForAll ? 1 : 0);
             body.append("damage_description", productDetials.damageDescription);
             body.append("weight", productDetials.estimatedWeight);
             body.append("pick_up_location", productDetials.estimatedPickUp);
             body.append("pickup_date", productDetials.pickupDate);
-            body.append("is_donation", productDetials.isDonation);
+            body.append("is_donation", productDetials.isDonation ? 1 : 0);
 
             fetch(`${CREATE_PRODUCT}`, {
                 method: 'POST',
@@ -279,7 +281,6 @@ const CreateDonationProduct = () => {
                 body,
             }).then(response => response.json())
                 .then(async result => {
-
                     setLoading(false)
                     if (result?.errors) {
                         showMessage({
@@ -290,12 +291,12 @@ const CreateDonationProduct = () => {
                         return setErrors(result.errors);
 
                     }
-                    if (result.response === 'failure') {
+                    if (result.success === false) {
                         setErrors({
                             // email: [result?.message],
                             password: [result?.message],
                         });
-                        showMessage({
+                        return showMessage({
                             message: "Failed to create product",
                             description: "Something went wrong. Please try again.",
                             type: "info",
@@ -303,9 +304,9 @@ const CreateDonationProduct = () => {
                             duration: 3000,
                             icon: "danger"
                         })
-                        return navigation.navigate("Reuse")
+
                     }
-                    if (result.response === 'success') {
+                    if (result.success === true) {
                         //reset the product details
                         setProductDetails({
                             title: "",
@@ -338,14 +339,14 @@ const CreateDonationProduct = () => {
                             estimatedPickUp: ""
                         })
                         showMessage({
-                            message: "Success",
+                            message: "Product Created",
                             description: "Product created successfully.",
                             type: "info",
                             autoHide: true,
                             duration: 3000,
                             icon: "success"
                         })
-                        return navigation.goBack();
+                        return navigation.navigate("Reuse")
                     }
 
 
@@ -369,10 +370,6 @@ const CreateDonationProduct = () => {
             setLoading(false);
         }
     }
-
-    // useEffect(() => {
-    //     console.log(productDetials)
-    // }, [productDetials])
 
 
 

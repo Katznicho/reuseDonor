@@ -69,13 +69,11 @@ function ReuseStack() {
                 options={{
                     title: 'Product Details',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex,
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 30,
-                    },
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
+                    headerTintColor: COLORS.primaryBlackHex,
                     headerLeft: () => (
 
                         <TouchableOpacity
@@ -84,7 +82,7 @@ function ReuseStack() {
                         >
                             <Entypo
                                 name="chevron-left"
-                                color={COLORS.primaryWhiteHex}
+                                color={COLORS.primaryBlackHex}
                                 size={28}
                             />
 

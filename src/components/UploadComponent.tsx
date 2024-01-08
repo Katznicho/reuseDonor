@@ -48,7 +48,6 @@ const UploadComponent = ({
       width: 300,
       height: 400,
     }).then(image => {
-      //   console.log(image);
       setImage({
         rnImagePath: RNFetchBlob.wrap(image.path),
         imagePath: image.path,
@@ -101,7 +100,7 @@ const UploadComponent = ({
       <View style={styles.centeredView}>
         <Text
           style={{
-            color: COLORS.primaryWhiteHex,
+            color: COLORS.primaryBlackHex,
             marginTop: 10,
             fontWeight: 'bold',
             textAlign: 'center',
@@ -130,10 +129,10 @@ const UploadComponent = ({
                 <View style={{ marginRight: 20 }}>
                   <MaterialIcons
                     name="photo-library"
-                    color={COLORS.primaryWhiteHex}
+                    color={COLORS.primaryBlackHex}
                     size={30}
                   />
-                  <Text style={{ color: COLORS.primaryWhiteHex }}>Gallery</Text>
+                  <Text style={{ color: COLORS.primaryBlackHex }}>Gallery</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.2} onPress={takeImage}>
@@ -141,9 +140,9 @@ const UploadComponent = ({
                   <Entypo
                     name={'camera'}
                     size={30}
-                    color={COLORS.primaryWhiteHex}
+                    color={COLORS.primaryBlackHex}
                   />
-                  <Text style={{ color: COLORS.primaryWhiteHex }}>Camera</Text>
+                  <Text style={{ color: COLORS.primaryBlackHex }}>Camera</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -153,7 +152,7 @@ const UploadComponent = ({
             underlayColor="#fff"
             style={{
               ...styles.openButton,
-              backgroundColor: 'white',
+              backgroundColor: COLORS.primaryRedHex,
               width: '100%',
               marginTop: 10,
             }}
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     left: 0,
-    backgroundColor: COLORS.primaryDarkGreyHex,
+    backgroundColor: COLORS.primaryWhiteHex,
     borderTopLeftRadius: 27,
     borderTopRightRadius: 27,
     alignItems: 'center',

@@ -27,22 +27,12 @@ const MyProducts = () => {
   console.log("==========data=====================")
 
 
-
-
-
-
-
-
-
   //flat the data
   // const flattenedData = data?.pages.flatMap(page => page.results) || [];
   const productData = data?.pages.flatMap(page => page.data);
 
   console.log("=============payment data length==========================")
   console.log(productData?.length);
-
-
-
 
 
   const loadMoreData = () => {

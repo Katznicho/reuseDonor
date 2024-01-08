@@ -1,20 +1,19 @@
-import { Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useFirebase } from '../../hooks/useFirebase';
 import { Switch } from 'react-native-ui-lib';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 import { DEFAULT_USER_PROFILE, PRODUCT_STATUS } from '../utils/constants/constants';
 import Entypo from "react-native-vector-icons/Entypo";
-import { Dimensions } from 'react-native';
+
 
 const { width } = Dimensions.get('window');
 
 const MyProductDetails = () => {
 
-    const { getUserByUid } = useFirebase();
+
 
     const [ownerDetails, setOwnerDetails] = useState<any>();
 
@@ -22,15 +21,11 @@ const MyProductDetails = () => {
     const navigation = useNavigation<any>();
     const { params } = useRoute<any>();
 
-    useEffect(() => {
-        if (params.item) {
-            getUserByUid(params.item.userId).then((res) => {
-                setOwnerDetails(res);
 
-            })
-        }
 
-    }, [])
+    console.log("==============params========================")
+    console.log(params)
+    console.log("==============params====================")
 
 
     return (
@@ -49,7 +44,7 @@ const MyProductDetails = () => {
         >
             {/* header section */}
             <ImageBackground
-                source={{ uri: params.item?.coverImage }}
+                source={{ uri: params.item?.cover_image }}
                 style={{ width: '100%', height: 300 }}
                 resizeMode="cover"
             >
@@ -95,7 +90,7 @@ const MyProductDetails = () => {
                         <Text
                             style={styles.title}
                         >
-                            {params.item.title}
+                            {params.item?.name}
                         </Text>
                     </View>
                     <View style={[generalStyles.flexStyles, { marginHorizontal: 10 }]}>
@@ -154,7 +149,7 @@ const MyProductDetails = () => {
                     style={styles.description}
                 >
                     <Text style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {params.item.description}
+                        {params.item?.description}
 
                     </Text>
                 </View>
@@ -165,12 +160,11 @@ const MyProductDetails = () => {
             <View>
                 <Text style={styles.title}>More Images</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {
-                        params.item.images?.map((item: any) => {
-
+                    {params?.item?.images &&
+                        JSON.parse(params.item.images).map((item: string, index: number) => {
                             return (
                                 <TouchableOpacity
-                                    key={item}
+                                    key={index}
                                     style={styles.imageContainer}
                                 >
                                     <Image
@@ -178,9 +172,8 @@ const MyProductDetails = () => {
                                         style={styles.image}
                                     />
                                 </TouchableOpacity>
-                            )
-                        })
-                    }
+                            );
+                        })}
                 </ScrollView>
             </View>
             {/* more pictures */}
@@ -192,7 +185,7 @@ const MyProductDetails = () => {
                     // generalstyles.centerContent,
 
                     styles.description,
-                    { elevation: 20, marginHorizontal: 10, borderRadius: 20, marginVertical: 20, padding: 10, backgroundColor: COLORS.secondaryBlackRGBA },
+                    { elevation: 20, marginHorizontal: 10, borderRadius: 20, marginVertical: 20, padding: 10, backgroundColor: COLORS.primaryBlackHex },
                 ]}
             >
                 {/* reason */}
@@ -262,7 +255,7 @@ const MyProductDetails = () => {
                     <View style={[generalStyles.flexStyles, { justifyContent: "space-between", alignItems: "center" }]}>
                         <Text style={{ color: COLORS.primaryWhiteHex, padding: 2 }}>Location</Text>
                         <Text style={{ color: COLORS.primaryLightGreyHex, padding: 5 }}>
-                            {params.item?.estimatedPickUp}
+                            {params.item?.pick_up_location}
 
                         </Text>
 
@@ -276,7 +269,7 @@ const MyProductDetails = () => {
                     <View style={[generalStyles.flexStyles, { justifyContent: "space-between", alignItems: "center" }]}>
                         <Text style={{ color: COLORS.primaryWhiteHex, padding: 2 }}>Estimated Weight(Kgs)</Text>
                         <Text style={{ color: COLORS.primaryLightGreyHex, padding: 5 }}>
-                            {params.item?.estimatedWeight}
+                            {params.item?.weight}
 
                         </Text>
 
@@ -288,13 +281,13 @@ const MyProductDetails = () => {
 
                 <View style={styles.cardViewStyles}>
                     <View style={[generalStyles.flexStyles, { justifyContent: "space-between", alignItems: "center" }]}>
-                        <Text style={{ color: COLORS.primaryWhiteHex, padding: 2 }}>Available For Free</Text>
+                        <Text style={{ color: COLORS.primaryWhiteHex, padding: 2 }}>Available For All</Text>
                         <Switch
                             width={80}
                             height={38}
                             thumbSize={34}
                             thumbColor={COLORS.primaryBlackHex}
-                            value={params.item.isFree}
+                            value={params.item.is_product_available_for_all}
                             onColor={COLORS.primaryOrangeHex}
                         />
 
@@ -311,7 +304,7 @@ const MyProductDetails = () => {
                             height={38}
                             thumbSize={34}
                             thumbColor={COLORS.primaryBlackHex}
-                            value={params.item.isDeliveryFeeCovered}
+                            value={params.item.is_delivery_fee_covered}
                             onColor={COLORS.primaryOrangeHex}
                         />
 
@@ -328,7 +321,7 @@ const MyProductDetails = () => {
                             height={38}
                             thumbSize={34}
                             thumbColor={COLORS.primaryBlackHex}
-                            value={params.item.isProductNew}
+                            value={params.item.is_product_new}
                             onColor={COLORS.primaryOrangeHex}
                         />
 
@@ -345,7 +338,7 @@ const MyProductDetails = () => {
                             height={38}
                             thumbSize={34}
                             thumbColor={COLORS.primaryBlackHex}
-                            value={params.item.isProductDamaged}
+                            value={params.item.is_product_damaged}
                             onColor={COLORS.primaryOrangeHex}
                         />
 

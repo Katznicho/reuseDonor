@@ -268,14 +268,13 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                 >
                     <Picker
                         style={styles.fieldStyles}
-                        placeholder="enter community "
-                        // floatingPlaceholder
+                        placeholder="enter reuse community "
                         label='Community'
                         labelColor={COLORS.primaryWhiteHex}
                         labelStyle={styles.labelStyles}
 
                         placeholderTextColor={COLORS.primaryLightGreyHex}
-                        value={productDetials.receiverCommunity}
+                        value={productDetials.community_id}
                         enableModalBlur={false}
                         onChange={item => {
                             setProductDetails((prev: any) => {
@@ -406,6 +405,9 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                         marginHorizontal: 10
                     }]}
                     onPress={goToNextStep}
+                    disabled={
+                        productDetials.title === '' || productDetials.description === ''
+                    }
                 >
                     <Text style={generalStyles.loginText}>{'Next'}</Text>
                 </TouchableOpacity>

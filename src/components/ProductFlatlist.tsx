@@ -27,7 +27,7 @@ const ProductFlatlist = ({ productData, loadMoreData, isFetching }: any) => {
                         {/* icon */}
                         <Image
                             source={{
-                                uri: item?.coverImage,
+                                uri: item?.cover_image,
                             }}
                             style={{
                                 width: 60,
@@ -46,8 +46,8 @@ const ProductFlatlist = ({ productData, loadMoreData, isFetching }: any) => {
                         }}
                     >
 
-                        <Text style={styles.date}>{item?.title}</Text>
-                        <Text style={styles.status}>{item?.estimatedPickUp}</Text>
+                        <Text style={styles.date}>{item?.name}</Text>
+                        <Text style={styles.status}>{item?.pick_up_location}</Text>
                         <Text style={styles.date}>{limitDescription(item?.description, 15)}</Text>
 
 
