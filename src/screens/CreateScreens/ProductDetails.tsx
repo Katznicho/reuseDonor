@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { TextField, Picker, Switch, DateTimePicker, NumberInput, NumberInputData } from 'react-native-ui-lib';
-import { COLORS } from '../../theme/theme';
+import { COLORS, FONTFAMILY } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 import TextArea from '../../components/TextArea';
 
@@ -30,9 +30,8 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     style={styles.fieldStyles}
                     placeholder={'enter product name'}
                     hint={"enter product name"}
-                    labelStyle={{
-                        marginHorizontal: 10
-                    }}
+
+                    labelStyle={styles.labelStyles}
                     label='Product Name'
                     labelColor={COLORS.primaryWhiteHex}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
@@ -73,6 +72,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                         })
 
                     }}
+                    labelStyle={styles.labelStyles}
                     color={COLORS.primaryWhiteHex}
                     topBarProps={{ title: 'Product Categories' }}
 
@@ -82,9 +82,9 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                 // onSearchChange={value => console.warn('value', value)}
                 >
                     {categories.map((item: any) => (
-                        <Picker.Item key={item.value}
-                            value={item.value}
-                            label={item.label}
+                        <Picker.Item key={item.id}
+                            value={item.id}
+                            label={item.name}
                         />
                     ))}
                 </Picker>
@@ -112,7 +112,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     onColor={COLORS.primaryOrangeHex}
 
                 />
-                <Text style={{ marginHorizontal: 10 }}>Is Product free of Charge  ?</Text>
+                <Text style={[{ marginHorizontal: 10 }, styles.labelStyles]}>Is Product free of Charge  ?</Text>
             </View>
 
             {/* free product */}
@@ -135,7 +135,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                         }
                         onColor={COLORS.primaryOrangeHex}
                     />
-                    <Text style={{ marginHorizontal: 10 }}>Is  Delivery Fee  Covered    ?</Text>
+                    <Text style={[{ marginHorizontal: 10 }, styles.labelStyles]}>Is  Delivery Fee  Covered    ?</Text>
                 </View>)
             }
 
@@ -157,7 +157,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     }
                     onColor={COLORS.primaryOrangeHex}
                 />
-                <Text style={{ marginHorizontal: 10 }}>Is Product Available For All ?</Text>
+                <Text style={[{ marginHorizontal: 10 }, styles.labelStyles]}>Is Product Available For All ?</Text>
             </View>
             {/* for all */}
 
@@ -178,7 +178,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     }
                     onColor={COLORS.primaryOrangeHex}
                 />
-                <Text style={{ marginHorizontal: 10 }}>Is the Created Product New ?</Text>
+                <Text style={[{ marginHorizontal: 10 }, styles.labelStyles]}>Is the Created Product New ?</Text>
             </View>
             {/* product new */}
 
@@ -199,7 +199,7 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     }
                     onColor={COLORS.primaryBlackHex}
                 />
-                <Text style={{ marginHorizontal: 10 }}> Product has any damages ?</Text>
+                <Text style={[{ marginHorizontal: 10 }, styles.labelStyles]}> Product has any damages ?</Text>
             </View>
             {/* damages */}
 
@@ -272,13 +272,14 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                         // floatingPlaceholder
                         label='Community'
                         labelColor={COLORS.primaryWhiteHex}
+                        labelStyle={styles.labelStyles}
 
                         placeholderTextColor={COLORS.primaryLightGreyHex}
                         value={productDetials.receiverCommunity}
                         enableModalBlur={false}
                         onChange={item => {
                             setProductDetails((prev: any) => {
-                                return { ...prev, receiverCommunity: item }
+                                return { ...prev, community_id: item }
                             })
                         }}
                         color={COLORS.primaryWhiteHex}
@@ -290,9 +291,9 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
 
                     >
                         {communities.map((item: any) => (
-                            <Picker.Item key={item.value}
-                                value={item.value}
-                                label={item.label}
+                            <Picker.Item key={item.id}
+                                value={item.id}
+                                label={item.name}
                             //   disabled={option.disabled}
                             />
                         ))}
@@ -312,9 +313,8 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     style={styles.fieldStyles}
                     placeholder={'enter estimated weight in(kgs)'}
                     hint={"enter estimated  weight"}
-                    labelStyle={{
-                        marginHorizontal: 10
-                    }}
+
+                    labelStyle={styles.labelStyles}
                     label='Estimated Weight(kgs)'
                     labelColor={COLORS.primaryWhiteHex}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
@@ -345,9 +345,8 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     style={styles.fieldStyles}
                     placeholder={'format dd/mm/yyyy'}
                     hint={"pick up date format dd/mm/yyyy"}
-                    labelStyle={{
-                        marginHorizontal: 10
-                    }}
+
+                    labelStyle={styles.labelStyles}
                     label='Estimated Pick Up Date'
                     labelColor={COLORS.primaryWhiteHex}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
@@ -370,6 +369,10 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
             {/* estimated pick up  date*/}
 
             <View>
+                <View>
+                    <Text style={[styles.labelStyles, { marginHorizontal: 20 }]}>
+                        Product Description</Text>
+                </View>
                 <TextArea
                     placeholder="Tell us about your product"
                     text={productDetials.description}
@@ -385,12 +388,12 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
             <View style={styles.buttonStyles}>
 
                 <TouchableOpacity
-                    style={[generalStyles.loginContainer, 
-                        {
+                    style={[generalStyles.loginContainer,
+                    {
                         width: "50%",
                         marginHorizontal: 10
                     }
-                ]}
+                    ]}
                     onPress={goBack}
 
                 >
@@ -433,6 +436,14 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.primaryWhiteHex,
         borderBottomWidth: 2,
         // height: 45
+        fontSize: 15,
+        fontFamily: FONTFAMILY.poppins_light,
+        color: COLORS.primaryWhiteHex
+    },
+    labelStyles: {
+        color: COLORS.primaryWhiteHex,
+        fontFamily: FONTFAMILY.poppins_semibold,
+        fontSize: 15
     },
     viewStyles: {
         marginHorizontal: 20,

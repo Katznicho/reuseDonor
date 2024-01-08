@@ -167,7 +167,7 @@ const ProductImages = ({
                         generalStyles.loginContainer,
                         {
                             width: "50%",
-                            backgroundColor: count.some((item: any) => item.imagePath === null) || uploadingImages ? COLORS.primaryGreyHex : COLORS.primaryOrangeHex,
+                            backgroundColor: count.some((item: any) => item.imagePath === null) || uploadingImages ? COLORS.primaryLightGreyHex : COLORS.primaryOrangeHex,
                             marginHorizontal: 10
                         }
                     ]
@@ -184,12 +184,12 @@ const ProductImages = ({
 
 
                 <TouchableOpacity
-                    style={[generalStyles.loginContainer, 
-                        {
+                    style={[generalStyles.loginContainer,
+                    {
                         width: "40%",
-                        backgroundColor: count.some((item: any) => item.imagePath === null) || uploadingImages ? COLORS.primaryGreyHex : COLORS.primaryOrangeHex
+                        backgroundColor: count.some((item: any) => item.imagePath === null) || uploadingImages ? COLORS.primaryLightGreyHex : COLORS.primaryOrangeHex
                     }
-                ]}
+                    ]}
                     onPress={goToNextStep}
                     disabled={count.some((item: any) => item.imagePath === null) || uploadingImages}
                 >

@@ -1,8 +1,8 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, ScrollView, View, Text,TouchableOpacity } from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet, ScrollView, View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { TextField } from 'react-native-ui-lib';
 import { generalStyles } from '../utils/generatStyles';
-import { COLORS } from '../../theme/theme';
+import { COLORS, FONTFAMILY } from '../../theme/theme';
 
 
 
@@ -15,9 +15,10 @@ const ProductLocation = ({ setProductDetails, goBack, loading, createProduct }: 
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
                 marginVertical: 10,
-                marginHorizontal: 5
+                marginHorizontal: 20
             }}
             keyboardShouldPersistTaps="always"
+
         >
 
             <View >
@@ -32,9 +33,7 @@ const ProductLocation = ({ setProductDetails, goBack, loading, createProduct }: 
                             style={styles.fieldStyles}
                             placeholder={'enter product location'}
                             hint={"enter product location"}
-                            labelStyle={{
-                                marginHorizontal: 10
-                            }}
+                            labelStyle={styles.labelStyles}
                             label='Product Location'
                             labelColor={COLORS.primaryWhiteHex}
                             placeholderTextColor={COLORS.secondaryLightGreyHex}
@@ -114,6 +113,14 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.primaryWhiteHex,
         borderBottomWidth: 2,
         // height: 45
+        fontSize: 15,
+        fontFamily: FONTFAMILY.poppins_light,
+        color: COLORS.primaryWhiteHex
+    },
+    labelStyles: {
+        color: COLORS.primaryWhiteHex,
+        fontFamily: FONTFAMILY.poppins_semibold,
+        fontSize: 15
     },
 
 })

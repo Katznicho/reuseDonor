@@ -90,7 +90,7 @@ const Login = () => {
       })
         .then(response => response.json())
         .then(async result => {
-          console.log(result);
+        
 
           if (result?.errors) {
             setErrors(result.errors);

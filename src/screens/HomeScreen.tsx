@@ -192,7 +192,7 @@ const HomeScreen = ({ navigation }: any) => {
 
 
         {/* totals */}
-        <Totals />
+        {/* <Totals /> */}
         {/* totals */}
 
 

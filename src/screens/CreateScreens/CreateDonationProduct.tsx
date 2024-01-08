@@ -3,10 +3,8 @@ import { SafeAreaView, Alert, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Wizard, WizardStepStates, } from 'react-native-ui-lib';
 import { RootState } from '../../redux/store/dev';
-import { useFirebase } from '../../hooks/useFirebase';
 import { useSelector } from 'react-redux';
 import { UploadImage } from '../../hooks/UploadImage';
-import * as reactNativeFlashMessage from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
 import ProductDetails from './ProductDetails';
 import ProductImages from './ProductImages';
@@ -14,6 +12,8 @@ import ProductLocation from './ProductLocation';
 import { PRODUCT_STORAGE } from '../utils/constants/constants';
 import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
+import { CREATE_PRODUCT, GET_ALL_CATEGORIES, GET_ALL_COMMUNITIES } from '../utils/constants/routes';
+import { showMessage } from 'react-native-flash-message';
 
 
 
@@ -31,52 +31,59 @@ const CreateDonationProduct = () => {
     //product details
     const [showModal, setShowModal] = useState<boolean>(false);
     const [imagePath, setImagePath] = useState<any>(null);
-    const { user } = useSelector((state: RootState) => state.user);
+    const { user, authToken } = useSelector((state: RootState) => state.user);
     const [uploadingImages, setUploadingImages] = useState<boolean>(false);
     const [categories, setCategories] = useState<any[]>([]);
     const [communities, setCommunities] = useState<any[]>([]);
 
+    const [errors, setErrors] = useState<any>({});
+
     const [loading, setLoading] = useState<boolean>(false);
-    const { createDonationProduct, getAllCategories, getAllCommunities } = useFirebase();
+
 
 
     const navigation = useNavigation<any>();
 
     useEffect(() => {
-        getAllCategories().then((res) => {
-            //create new array for the categories
-            let categories: any = [];
-            res.forEach((item: any) => {
-                categories.push({
-                    label: item.name,
-                    value: item.id
-                })
-            })
-            setCategories(categories);
 
+        fetch(GET_ALL_CATEGORIES, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res) => {
+
+            res.json().then((data) => {
+
+                setCategories(data.data);
+            }).catch((err) => {
+                console.log(err)
+            })
         }).catch((err) => {
+            console.log(err)
+        })
+
+        fetch(GET_ALL_COMMUNITIES, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res) => {
+
+            res.json().then((data) => {
+
+                setCommunities(data?.data);
+            })
+        }).catch((err) => {
+            console.log(err)
         })
     }, [])
 
-    useEffect(() => {
-        getAllCommunities()
-            .then((res) => {
-                let communities: any = [];
-                res.forEach((item: any) => {
-                    communities.push({
-                        label: item.communityName,
-                        value: item.id
-                    })
-                })
-                setCommunities(communities);
-            }).catch((err) => {
-
-            })
-    }, [])
 
 
     const [productDetials, setProductDetails] = useState<any>({
         title: "",
+        community: "",
         description: "",
         category: "",
         quantity: 0,
@@ -100,7 +107,7 @@ const CreateDonationProduct = () => {
         damageDescription: "",
         estimatedPickUp: "",
         isDeliverySet: false,
-    
+
 
     });
 
@@ -241,45 +248,121 @@ const CreateDonationProduct = () => {
     const createProduct = async () => {
         try {
             setLoading(true);
-            await createDonationProduct(user?.UID, productDetials);
-            setLoading(false);
-            reactNativeFlashMessage.showMessage({
-                message: 'Product created successfully',
-                type: 'success',
-                icon: 'success',
-            })
-            //reset the product details
-            setProductDetails({
-                title: "",
-                description: "",
-                category: "",
-                quantity: 0,
-                price: 0,
-                images: [],
-                coverImage: "",
-                location: "",
-                reason: "",
-                totalAmount: "",
-                estimatedWeight: 0,
-                pickupDate: "",
-                isNegotiable: false,
-                isFree: false,
-                isDonation: true,
-                isExchange: false,
-                isDeliveryAvailable: false,
-                isDeliveryFeeCovered: false,
-                isPickupAvailable: false,
-                isProductNew: false,
-                isProductUsed: false,
-                isProductAvailableForAll: false,
-                isProductRefurbished: false,
-                isProductDamaged: false,
-                damageDescription: "",
-                receiverCommunity: "",
-                estimatedPickUp: ""
-            })
+            setLoading(true)
+            const headers = new Headers();
+            headers.append('Accept', 'application/json');
+            headers.append('Authorization', `Bearer ${authToken}`);
 
-            navigation.navigate("Reuse");
+            const body = new FormData();
+            body.append('name', productDetials.title);
+            body.append('community_id', productDetials.community_id);
+            body.append('description', productDetials.description);
+            body.append('category_id', productDetials.category);
+            body.append('price', productDetials.price);
+            body.append('cover_image', productDetials.coverImage);
+            body.append("images", productDetials.images);
+            body.append('is_delivery_available', productDetials.isDeliveryAvailable);
+            body.append('is_pickup_available', productDetials.isPickupAvailable);
+            body.append('is_free', productDetials.isFree);
+            body.append("is_product_new", productDetials.isProductNew);
+            body.append("is_product_damaged", productDetials.isProductDamaged);
+            body.append("is_product_available_for_all", productDetials.isProductAvailableForAll);
+            body.append("damage_description", productDetials.damageDescription);
+            body.append("weight", productDetials.estimatedWeight);
+            body.append("pick_up_location", productDetials.estimatedPickUp);
+            body.append("pickup_date", productDetials.pickupDate);
+            body.append("is_donation", productDetials.isDonation);
+
+            fetch(`${CREATE_PRODUCT}`, {
+                method: 'POST',
+                headers,
+                body,
+            }).then(response => response.json())
+                .then(async result => {
+
+                    setLoading(false)
+                    if (result?.errors) {
+                        showMessage({
+                            message: 'Failed to create product',
+                            type: 'info',
+                            icon: 'info',
+                        })
+                        return setErrors(result.errors);
+
+                    }
+                    if (result.response === 'failure') {
+                        setErrors({
+                            // email: [result?.message],
+                            password: [result?.message],
+                        });
+                        showMessage({
+                            message: "Failed to create product",
+                            description: "Something went wrong. Please try again.",
+                            type: "info",
+                            autoHide: true,
+                            duration: 3000,
+                            icon: "danger"
+                        })
+                        return navigation.navigate("Reuse")
+                    }
+                    if (result.response === 'success') {
+                        //reset the product details
+                        setProductDetails({
+                            title: "",
+                            community_id: "",
+                            description: "",
+                            category: "",
+                            quantity: 0,
+                            price: 0,
+                            images: [],
+                            coverImage: "",
+                            location: "",
+                            reason: "",
+                            totalAmount: "",
+                            estimatedWeight: 0,
+                            pickupDate: "",
+                            isNegotiable: false,
+                            isFree: false,
+                            isDonation: true,
+                            isExchange: false,
+                            isDeliveryAvailable: false,
+                            isDeliveryFeeCovered: false,
+                            isPickupAvailable: false,
+                            isProductNew: false,
+                            isProductUsed: false,
+                            isProductAvailableForAll: false,
+                            isProductRefurbished: false,
+                            isProductDamaged: false,
+                            damageDescription: "",
+                            receiverCommunity: "",
+                            estimatedPickUp: ""
+                        })
+                        showMessage({
+                            message: "Success",
+                            description: "Product created successfully.",
+                            type: "info",
+                            autoHide: true,
+                            duration: 3000,
+                            icon: "success"
+                        })
+                        return navigation.goBack();
+                    }
+
+
+
+                }).catch((error) => {
+                    setLoading(false)
+                    showMessage({
+                        message: "Failed to create product",
+                        description: "Something went wrong. Please try again.",
+                        type: "info",
+                        autoHide: true,
+                        duration: 3000,
+                        icon: "danger"
+                    })
+                    return setLoading(false);
+                })
+
 
         } catch (error) {
             console.log(error);
