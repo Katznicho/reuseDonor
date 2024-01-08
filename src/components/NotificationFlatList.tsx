@@ -1,17 +1,35 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable, FlatList } from 'react-native'
 import React from 'react'
-import { ActivityIndicator } from './ActivityIndicator'
-import { FlatList } from 'react-native-gesture-handler'
-import { COLORS, FONTFAMILY } from '../theme/theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native'
+import NotificationCard from './NotificationCard'
 
 
-const NotificationFlatList = () => {
+
+
+const NotificationFlatList = ({ notificationData, loadMoreData, isFetching }: any) => {
   return (
-    <View>
-      <Text>NotificationFlatList</Text>
-    </View>
+    <FlatList
+      data={notificationData}
+      showsVerticalScrollIndicator={false}
+      keyExtractor={item => String(item?.id)}
+      style={{ marginHorizontal: 10 }}
+      renderItem={({ item, index }: any) => (
+        <NotificationCard
+          type={item?.title}
+          time={item?.created_at}
+          description={item?.message}
+        />
+      )}
+
+      onEndReached={() => {
+        loadMoreData()
+      }}
+      onEndReachedThreshold={0.5}
+      // ListFooterComponent={isFetching && <ActivityIndicator />}
+      // refreshControl={isFetching && <ActivityIndicator />}
+      onRefresh={loadMoreData}
+      refreshing={isFetching}
+      contentContainerStyle={{ paddingBottom: 50 }}
+    />
   )
 }
 

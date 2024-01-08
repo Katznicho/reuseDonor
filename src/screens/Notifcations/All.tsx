@@ -16,20 +16,16 @@ import EmptyListAnimation from '../../components/EmptyListAnimation';
  */
 const All = (): JSX.Element => {
 
-    const navigation = useNavigation<any>();
 
     const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite("allnotifications", USERNOTIFICATIONS);
-    console.log("=========== data=========================")
-    console.log(data?.pages[0].total)
-    console.log("==========data=====================")
-
-
+    // console.log("=========== data=========================")
+    // console.log(data)
+    // console.log("==========data=====================")
     //flat the data
     // const flattenedData = data?.pages.flatMap(page => page.results) || [];
     const notificationData = data?.pages.flatMap(page => page.data);
 
-    console.log("=============notification data length==========================")
-    console.log(notificationData?.length);
+    // console.log(notificationData);
 
 
     const loadMoreData = () => {
@@ -37,9 +33,7 @@ const All = (): JSX.Element => {
     };
 
 
-    console.log("====================================")
-    console.log(hasNextPage)
-    console.log("===============================")
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primaryBlackHex }}>
@@ -48,15 +42,6 @@ const All = (): JSX.Element => {
                     <EmptyListAnimation
                         title={'You dont have any notifications'}
                     />
-                    <View>
-
-                        <TouchableOpacity
-                            style={generalStyles.loginContainer}
-                            onPress={() => navigation.navigate('Create')}
-                        >
-                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
-                        </TouchableOpacity>
-                    </View>
 
                 </View>
             }

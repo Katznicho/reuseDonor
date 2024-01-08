@@ -14,17 +14,15 @@ const fetcher = async (limit: number = 20, pageNumber: number = 1, queryUrl: str
             url += `&status=${status}`;
         }
 
-        console.log("===========url=======================")
-        console.log(url)
-        console.log("===========url=======================")
-
         const response = await fetch(url, {
             method: 'GET',
             headers,
         });
 
         const data = await response.json();
-        console.log(data?.data)
+
+        console.log('notifications data', data);
+
         return {
             data: data?.data?.data,
             nextPage: data?.data?.pagination?.current_page + 1,
