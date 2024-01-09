@@ -1,26 +1,25 @@
 /* eslint-disable prettier/prettier */
 import {
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     View,
     Text,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    Alert
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { useFirebase } from '../../hooks/useFirebase';
+import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Dialog, PanningProvider } from 'react-native-ui-lib';
-import { PayWithFlutterwave } from 'flutterwave-react-native';
-import { FLUTTER_WAVE_MERCHANT_KEY } from '@env';
-import { showMessage } from 'react-native-flash-message';
-import { generateTransactionRef } from '../utils/helpers/helpers';
-import { PAYMENT_STATUS } from '../utils/constants/constants';
-import { RedirectParams } from '../Types/types';
 import { generalStyles } from '../utils/generatStyles';
 import { COLORS } from '../../theme/theme';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { RootState } from '../../redux/store/dev';
+import { useSelector } from 'react-redux';
+import { PAYMENT_TYPE } from '../utils/constants/constants';
+import { PROCESSORDER } from '../utils/constants/routes';
+import { showMessage } from 'react-native-flash-message';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
 
 
 const { width } = Dimensions.get('window');
@@ -29,30 +28,11 @@ const { width } = Dimensions.get('window');
 
 const PaymentSummary = () => {
 
-    const { updateProductPaymentStatus, updatePaymentStatus } = useFirebase();
     const navigation = useNavigation<any>();
+    const { authToken } = useSelector((state: RootState) => state.user);
+    const [redirect_url, setRedirect_url] = useState('')
 
-    const handleOnRedirect = async (data: RedirectParams) => {
 
-
-        if (data.status === 'successful') {
-            //console.log("Payment Successful");
-
-            await updatePaymentStatus(data.tx_ref, PAYMENT_STATUS.COMPLETED);
-        }
-        else {
-            //console.log("Payment Cancelled");
-            await updatePaymentStatus(data.tx_ref, PAYMENT_STATUS.COMPLETED);
-        }
-        await updateProductPaymentStatus(params.item.id, PAYMENT_STATUS.COMPLETED, data.tx_ref);
-
-        showMessage({
-            message: "Payment Successful",
-            type: "success"
-
-        })
-        navigation.navigate("Payments");
-    };
 
 
 
@@ -61,7 +41,7 @@ const PaymentSummary = () => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] =
         useState<string>('Other');
 
-    const [transactionRef, setTransactionRef] = useState<string>("");
+
 
     const handlePaymentMethodSelection = (method: React.SetStateAction<string>) => {
         setSelectedPaymentMethod(method);
@@ -78,15 +58,80 @@ const PaymentSummary = () => {
     const handlePayment = async () => {
 
         try {
-            setLoading(true);
             setIsVisible(true);
-
-
         } catch (error) {
             console.log(error);
         }
 
     };
+
+    const onMakePayment = async () => {
+
+        if (selectedPaymentMethod === 'Other') {
+            const formData = new FormData();
+            formData.append('amount', params.item?.total_amount);
+            formData.append('description', "Paying for reuse product");
+            formData.append('phone_number', params?.ownerDetails?.phone_number);
+            formData.append("product_id", params?.item?.id);
+            formData.append('callback', `https://reuse.risidev.com/finishPayment`);
+            formData.append('cancel_url', `https://reuse.risidev.com/cancelPayment`);
+            formData.append("payment_type", PAYMENT_TYPE.Product)
+
+            const headers = new Headers();
+            headers.append('Accept', 'application/json');
+            headers.append('Authorization', `Bearer ${authToken}`);
+            setLoading(true)
+
+
+            fetch(`${PROCESSORDER}`, {
+                method: 'POST',
+                headers,
+                body: formData
+            }).then((response) => {
+
+                return response.json()
+            }).then((result) => {
+
+                console.log(result)
+                if (result?.response?.success) {
+                    setRedirect_url(result?.response?.message?.redirect_url)
+                    // return navigation.navigate('ReuseWebView', {
+                    //     url: result?.response?.message?.redirect_url
+                    // })
+                    return navigation.navigate("Donate", { screen: "MyWebView", params: { url: result?.response?.message?.redirect_url } })
+                }
+                else {
+                    setLoading(false);
+                    return showMessage({
+                        message: "Failed to Initiate Deposit",
+                        description: "Please try again",
+                        type: "info",
+                        icon: "info",
+                        duration: 3000,
+                        autoHide: true
+                    })
+
+                }
+
+            }).catch((error) => {
+                showMessage({
+                    message: 'Failed to create pin',
+                    description: 'Please try again',
+                    type: 'info',
+                    icon: 'info',
+                    duration: 3000,
+                    autoHide: true,
+                });
+                return setLoading(false);
+
+            })
+
+        }
+        else {
+            return Alert.alert("wallet")
+        }
+
+    }
 
     return (
         <KeyboardAwareScrollView
@@ -114,7 +159,7 @@ const PaymentSummary = () => {
                     }}
                     height={500}>
                     <View>
-                        <Text>Select Payment Method</Text>
+                        <Text style={[generalStyles.textStyle]}>Select Payment Method</Text>
                     </View>
                     <View style={[styles.paymenthMethod]}>
                         <TouchableOpacity
@@ -166,6 +211,15 @@ const PaymentSummary = () => {
                             >
                                 <Text style={generalStyles.loginText}>{'Cancel Payment'}</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                disabled={selectedPaymentMethod === ''}
+                                style={[generalStyles.loginContainer, { backgroundColor: COLORS.primaryOrangeHex, width: "100%" }]}
+                                onPress={() => onMakePayment()}
+
+                            >
+                                <Text style={generalStyles.loginText}>{'Make Payment'}</Text>
+                            </TouchableOpacity>
+                            {loading && <ActivityIndicator />}
                         </View>
 
                     </View>
@@ -357,7 +411,7 @@ const styles = StyleSheet.create({
     },
     paymenthMethod: {
         // backgroundColor: COLORS.primaryWhiteHex,
-        elevation: 10,
+        // elevation: 10,
         borderRadius: 10,
     },
     choosePayment: {
@@ -367,6 +421,7 @@ const styles = StyleSheet.create({
         padding: 25,
         marginHorizontal: 20,
         marginVertical: 10,
+        width: width * 0.8,
     },
     textStyle: {
         color: COLORS.primaryWhiteHex

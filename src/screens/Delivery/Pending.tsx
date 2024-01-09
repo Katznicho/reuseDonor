@@ -7,12 +7,11 @@ import {
 import React from 'react';
 import EmptyListAnimation from '../../components/EmptyListAnimation';
 import { generalStyles } from '../utils/generatStyles';
-import ProductFlatlist from '../../components/ProductFlatlist';
 import { useNavigation } from '@react-navigation/native';
 import useFetchInfinite from '../../hooks/useFetchInfinite';
 import { DELIVERY_STATUS } from '../utils/constants/constants';
 import { USERDELIVERIES } from '../utils/constants/routes';
-
+import DeliveryFlatlist from '../../components/DeliveryFlatlist';
 
 
 //https://wix.github.io/react-native-ui-lib/docs/components/overlays/FeatureHighlight
@@ -77,7 +76,7 @@ const Pending = () => {
                 </View>
             }
 
-            <ProductFlatlist
+            <DeliveryFlatlist
                 productData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}

@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView, StatusBar, Button } from 'react-native'
+import { Text, View, SafeAreaView, Button } from 'react-native'
 import React, { useRef } from 'react'
 import { WebView } from 'react-native-webview';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -6,11 +6,17 @@ import { COLORS } from '../theme/theme';
 import { showMessage } from 'react-native-flash-message';
 import { generalStyles } from './utils/generatStyles';
 import { ActivityIndicator } from '../components/ActivityIndicator';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const MyWebView = () => {
     const { params } = useRoute<any>();
     const navigation = useNavigation<any>();
+
+
+    console.log("================params======================")
+    console.log(params.url)
+    console.log("===============params=======================")
 
 
     const webRef = useRef<any>();
@@ -36,7 +42,6 @@ const MyWebView = () => {
     return (
         <SafeAreaView style={[generalStyles.ScreenContainer]}>
 
-            <StatusBar backgroundColor={COLORS.primaryBlackHex} />
 
             <View style={{
                 flexDirection: 'row',
@@ -70,6 +75,7 @@ const MyWebView = () => {
                 onNavigationStateChange={handleNavigationStateChange}
                 style={{ flex: 1 }}
                 allowFileAccess
+                containerStyle={{ flex: 1, backgroundColor: 'white', paddingBottom: 100 }}
                 startInLoadingState
                 renderLoading={() => {
                     return <View style={{ flex: 1, }}>

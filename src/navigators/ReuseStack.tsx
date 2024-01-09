@@ -11,6 +11,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { generalStyles } from '../screens/utils/generatStyles';
 import Entypo from "react-native-vector-icons/Entypo";
 import { StyleSheet } from 'react-native';
+import MyWebView from '../screens/MyWebView';
 
 
 
@@ -148,6 +149,14 @@ function ReuseStack() {
 
                         </TouchableOpacity>
                     ),
+                }}
+            />
+
+            <Stack.Screen
+                name="ReuseWebView"
+                component={MyWebView}
+                options={{
+                    headerShown: false
                 }}
             />
 

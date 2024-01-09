@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store/dev';
@@ -18,7 +17,7 @@ const Donate = () => {
     const [reason, setReason] = useState<string>('')
     const [phoneNumber, setPhoneNumber] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
-    const { user, authToken } = useSelector((state: RootState) => state.user);
+    const {  authToken } = useSelector((state: RootState) => state.user);
 
     const [errors, setErrors] = useState<any>({});
 

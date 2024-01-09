@@ -68,7 +68,7 @@ const DeliveryTabs = () => {
                     //add some styling here
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="UnConfirmed"
                 component={UnConfirmed}
                 options={{
@@ -76,7 +76,7 @@ const DeliveryTabs = () => {
                     tabBarAccessibilityLabel: 'UnConfirmed',
                     //add some styling here
                 }}
-            />
+            /> */}
 
             <Tab.Screen
                 name="ConfirmedDelivery"
