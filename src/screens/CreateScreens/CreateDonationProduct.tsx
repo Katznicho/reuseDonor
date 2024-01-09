@@ -353,7 +353,7 @@ const CreateDonationProduct = () => {
 
                 }).catch((error) => {
                     setLoading(false)
-                    showMessage({
+                    return showMessage({
                         message: "Failed to create product",
                         description: "Something went wrong. Please try again.",
                         type: "info",
@@ -361,7 +361,7 @@ const CreateDonationProduct = () => {
                         duration: 3000,
                         icon: "danger"
                     })
-                    return setLoading(false);
+
                 })
 
 

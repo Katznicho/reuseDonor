@@ -18,7 +18,7 @@ const DeliveryFlatlist = ({ deliveryData, loadMoreData, isFetching }: any) => {
         <FlatList
             data={deliveryData}
             showsVerticalScrollIndicator={false}
-            keyExtractor={item => String(item.id)}
+            keyExtractor={item => String(item?.id)}
             renderItem={({ item, index }) => (
                 <Pressable style={styles.container} key={index}
                     onPress={() => navigation.navigate('DeliveryDetails', {
@@ -29,7 +29,7 @@ const DeliveryFlatlist = ({ deliveryData, loadMoreData, isFetching }: any) => {
                         {/* icon */}
                         <Image
                             source={{
-                                uri: item?.product?.coverImage
+                                uri: item?.product?.cover_image
                             }}
                             style={{
                                 width: 60,
@@ -48,11 +48,11 @@ const DeliveryFlatlist = ({ deliveryData, loadMoreData, isFetching }: any) => {
                         }}
                     >
 
-                        <Text style={styles.date}>{item?.product?.title}</Text>
+                        <Text style={styles.date}>{item?.product?.name}</Text>
                         {/* <Text style={styles.status}>{item?.deliveryDate}</Text>
                     <Text style={styles.status}>{item?.pickUpDate}</Text> */}
                         <Text style={styles.status}>{item?.status}</Text>
-                        <Text style={styles.status}>{item?.isConfirmed ? 'Confirmed' : 'Pending Confirmation'}</Text>
+                        <Text style={styles.status}>{item?.status == "Pending" ? 'Pending Confirmation' : 'Confirmed'}</Text>
                     </View>
                     <View
                         style={{
@@ -61,7 +61,7 @@ const DeliveryFlatlist = ({ deliveryData, loadMoreData, isFetching }: any) => {
                     >
                         {/* amount details */}
                         <View>
-                            <Text style={styles.status}>{item?.receiver.communityName}</Text>
+                            <Text style={styles.status}>{item?.user?.name}</Text>
                         </View>
                         {/* amoun details */}
                     </View>
@@ -70,7 +70,7 @@ const DeliveryFlatlist = ({ deliveryData, loadMoreData, isFetching }: any) => {
                         <Ionicons
                             name="chevron-forward"
                             size={24}
-                            color={COLORS.primaryBlackHex}
+                            color={COLORS.primaryWhiteHex}
                         />
                         {/* icon */}
                     </Pressable>

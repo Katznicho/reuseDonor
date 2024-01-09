@@ -34,13 +34,11 @@ const DeliveryStack = () => {
                 options={{
                     title: 'Delivery Details',
                     headerStyle: {
-                        backgroundColor: COLORS.primaryBlackHex
+                        backgroundColor: COLORS.primaryOrangeHex
                     },
-                    headerTitleStyle: {
-                        fontSize: 25,
-                    },
+                    headerTitleStyle: generalStyles.titleHeaderStyles,
                     headerTitleAlign: 'center',
-                    headerTintColor: COLORS.primaryWhiteHex,
+                    headerTintColor: COLORS.primaryBlackHex,
                 }}
             />
         </Stack.Navigator>

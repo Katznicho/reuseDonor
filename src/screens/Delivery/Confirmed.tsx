@@ -57,21 +57,13 @@ const Confirmed = () => {
                     <EmptyListAnimation
                         title={'You dont have any confirmed deliveries'}
                     />
-                    <View>
 
-                        <TouchableOpacity
-                            style={generalStyles.loginContainer}
-                            onPress={() => navigation.navigate('Create')}
-                        >
-                            <Text style={generalStyles.loginText}>{'Create Products'}</Text>
-                        </TouchableOpacity>
-                    </View>
 
                 </View>
             }
 
             <DeliveryFlatlist
-                productData={productData}
+                deliveryData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}
             />

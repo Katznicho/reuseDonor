@@ -100,9 +100,9 @@ export default function useFetchInfinite(queryKey: string, url: string, status: 
         getPreviousPageParam: (firstPage, allPages) => firstPage.currentPage - 1,
         staleTime: Infinity,
         cacheTime: Infinity,
-        // refetchOnWindowFocus: false,
-        // refetchOnReconnect: false,
-        // refetchInterval: 10000,
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+        refetchInterval: 10000,
     });
 
     return {

@@ -39,3 +39,7 @@ export const CREATE_PRODUCT = `${BASE_URL}/createProduct`
 
 //categories
 export const GET_ALL_CATEGORIES = `${BASE_URL}/getAllProductCategories`
+
+
+//delivery
+export const CONFIRM_DELIVERY = `${BASE_URL}/confirmDelivery`

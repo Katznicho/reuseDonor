@@ -92,7 +92,6 @@ const PaymentSummary = () => {
                 return response.json()
             }).then((result) => {
 
-                console.log(result)
                 if (result?.response?.success) {
                     setRedirect_url(result?.response?.message?.redirect_url)
                     // return navigation.navigate('ReuseWebView', {

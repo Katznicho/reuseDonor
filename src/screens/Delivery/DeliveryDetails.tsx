@@ -2,47 +2,119 @@ import {
     StyleSheet,
     Text,
     View,
-    SafeAreaView,
     ScrollView,
-
-    Dimensions
+    TouchableOpacity,
+    Dimensions,
+    Image
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
-import { useFirebase } from '../../hooks/useFirebase';
-import { TouchableOpacity } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
+import { formattedDate } from '../utils/helpers/helpers';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store/dev';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
+import { CONFIRM_DELIVERY } from '../utils/constants/routes';
+import { DELIVERY_STORAGE } from '../utils/constants/constants';
 
 const { width } = Dimensions.get('window');
 
 const DeliveryDetails = () => {
+
     const { item } = useRoute<any>().params;
-    console.log(item.id);
+    const { authToken } = useSelector((state: RootState) => state.user);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [errors, setErrors] = useState<any>({})
+
+
     const navigation = useNavigation<any>();
 
-    const { confirmDelivery } = useFirebase();
+    console.log(item?.proof)
+
+
 
     const onConfirmDelivery = () => {
-        confirmDelivery(item.id);
-        showMessage({
-            message: "Delivery Confirmed",
-            description: "Delivery has been confirmed",
-            type: "success",
-            icon: "success",
-            autoHide: true,
-            duration: 3000
 
-        })
-        navigation.navigate("ConfirmedDelivery");
+        try {
+            const headers = new Headers();
+            headers.append('Accept', 'application/json');
+            headers.append('Authorization', `Bearer ${authToken}`);
+            setLoading(true)
+
+            const body = new FormData();
+            body.append("delivery_id", item?.id);
+
+            fetch(`${CONFIRM_DELIVERY}`, {
+                method: 'POST',
+                headers,
+                body
+            }).then(response => response.json())
+                .then(result => {
+                    setLoading(false)
+                    if (result?.errors) {
+                        showMessage({
+                            message: 'Failed to create product',
+                            type: 'info',
+                            icon: 'info',
+                        })
+                        return setErrors(result.errors);
+
+                    }
+                    if (result.success === false) {
+                        setErrors({
+                            // email: [result?.message],
+                            password: [result?.message],
+                        });
+                        return showMessage({
+                            message: "Failed to confirm delivery",
+                            description: "Something went wrong. Please try again.",
+                            type: "info",
+                            autoHide: true,
+                            duration: 3000,
+                            icon: "danger"
+                        })
+
+                    }
+                    if (result.success == true) {
+                        showMessage({
+                            message: "Delivery Confirmed",
+                            description: "Delivery has been confirmed",
+                            type: "success",
+                            icon: "success",
+                            duration: 3000,
+                            autoHide: true
+                        })
+                        return navigation.goBack()
+                    }
+                })
+
+        } catch (error) {
+            setLoading(false)
+            return showMessage({
+                message: "Failed to confirm delivery",
+                description: "Something went wrong. Please try again.",
+                type: "info",
+                autoHide: true,
+                duration: 3000,
+                icon: "danger"
+            })
+        }
 
     }
 
 
 
+
+
+
     return (
-        <SafeAreaView style={generalStyles.ScreenContainer}>
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
+        >
             <ScrollView
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -51,6 +123,29 @@ const DeliveryDetails = () => {
                     backgroundColor: COLORS.primaryBlackHex
                 }}
             >
+                {/* proof of delivery */}
+                {item.status == "Completed" && (
+                    <View>
+                        <Text style={styles.title}>Proof of Delivery</Text>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            {item?.proof.map((item: string, index: number) => {
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.imageContainer}
+                                    >
+                                        <Image
+                                            source={{ uri: `${DELIVERY_STORAGE}${item}` }}
+                                            style={styles.image}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </ScrollView>
+                    </View>
+                )}
+
+                {/* proof of delivery */}
 
                 <View style={styles.cardViewStyles}>
                     <Text
@@ -62,7 +157,7 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.product?.title}
+                        {item?.product?.name} {item.owner_status}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -77,7 +172,7 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.receiver.communityName}
+                        {item?.community.name}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -107,7 +202,7 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.payments.status}
+                        {item?.payment?.status}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -122,7 +217,7 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.payments.totalAmount}
+                        {item?.payment?.amount}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -137,7 +232,7 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.pickUpDate}
+                        {formattedDate(item?.pickup_date)}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
@@ -152,12 +247,12 @@ const DeliveryDetails = () => {
                     </Text>
                     <Text
                         style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                        {item?.deliveryDate}
+                        {formattedDate(item?.delivery_date)}
                     </Text>
                     <View style={[styles.bottom]} />
                 </View>
                 {
-                    item?.isConfirmed
+                    item?.status != "Pending"
                         ?
                         <View style={styles.cardViewStyles}>
                             <Text
@@ -165,11 +260,7 @@ const DeliveryDetails = () => {
                                     color: COLORS.primaryWhiteHex,
                                     padding: 2,
                                 }}>
-                                Confirmed
-                            </Text>
-                            <Text
-                                style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                                Confirmed
+                                Confirmed Delivery
                             </Text>
                             <View style={[styles.bottom]} />
                         </View>
@@ -180,18 +271,14 @@ const DeliveryDetails = () => {
                                     color: COLORS.primaryWhiteHex,
                                     padding: 2,
                                 }}>
-                                Confirmed
-                            </Text>
-                            <Text
-                                style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                                Not Confirmed
+                                Not  Confirmed
                             </Text>
                             <View style={[styles.bottom]} />
                         </View>
                 }
 
                 {
-                    item?.isDelivered
+                    item?.status != "Completed"
                         ?
                         <View style={styles.cardViewStyles}>
                             <Text
@@ -199,7 +286,7 @@ const DeliveryDetails = () => {
                                     color: COLORS.primaryWhiteHex,
                                     padding: 2,
                                 }}>
-                                Delivered
+                                Not Delivered
                             </Text>
                             <Text
                                 style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
@@ -225,7 +312,8 @@ const DeliveryDetails = () => {
                 }
 
                 {
-                    !item.isConfirmed && (<TouchableOpacity
+                    item.status == "Pending" && (<TouchableOpacity
+                        disabled={loading}
                         style={[generalStyles.loginContainer, {
                             marginTop: 5,
                             marginBottom: 20
@@ -234,11 +322,14 @@ const DeliveryDetails = () => {
                         <Text style={generalStyles.loginText}>{'Confirm Delivery'}</Text>
                     </TouchableOpacity>)
                 }
+                {loading && <ActivityIndicator />}
+
+
 
 
                 {/* card */}
             </ScrollView>
-        </SafeAreaView>
+        </KeyboardAwareScrollView>
     );
 };
 
@@ -287,5 +378,5 @@ const styles = StyleSheet.create({
 
     textStyle: {
         color: COLORS.primaryWhiteHex
-    }
+    },
 });

@@ -23,15 +23,8 @@ const Pending = () => {
 
     const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${DELIVERY_STATUS.PENDING} DELIVERY `, USERDELIVERIES, DELIVERY_STATUS.PENDING);
     console.log("=========== data=========================")
-    console.log(data?.pages[0].total)
+    console.log(data?.pages[0].data)
     console.log("==========data=====================")
-
-
-
-
-
-
-
 
 
     //flat the data
@@ -77,7 +70,7 @@ const Pending = () => {
             }
 
             <DeliveryFlatlist
-                productData={productData}
+                deliveryData={productData}
                 loadMoreData={loadMoreData}
                 isFetching={isFetching}
             />
