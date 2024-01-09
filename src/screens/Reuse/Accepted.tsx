@@ -25,17 +25,13 @@ const Accepted = () => {
     const navigation = useNavigation<any>();
 
     const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite(`${PRODUCT_STATUS.ACCEPTED}PRODUCTS `, USERPRODUCTS, PRODUCT_STATUS.ACCEPTED);
-    console.log("=========== data=========================")
-    console.log(data?.pages[0].total)
-    console.log("==========data=====================")
 
 
     //flat the data
     // const flattenedData = data?.pages.flatMap(page => page.results) || [];
     const productData = data?.pages.flatMap(page => page.data);
 
-    console.log("=============payment data length==========================")
-    console.log(productData?.length);
+
 
 
     const loadMoreData = () => {
@@ -43,9 +39,6 @@ const Accepted = () => {
     };
 
 
-    console.log("====================================")
-    console.log(hasNextPage)
-    console.log("===============================")
 
 
     return (

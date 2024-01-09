@@ -23,9 +23,7 @@ const MyProductDetails = () => {
 
 
 
-    console.log("==============params========================")
-    console.log(params)
-    console.log("==============params====================")
+
 
 
     return (
@@ -72,7 +70,7 @@ const MyProductDetails = () => {
                             // onPress={() => onPressLogin()}
                             onPress={() => navigation.navigate('PaymentSummary', {
                                 item: params.item,
-                                ownerDetails: ownerDetails
+                                ownerDetails: params.item.user
                             })}
                         >
                             <Text style={generalStyles.loginText}>{'Make Payment'}</Text>

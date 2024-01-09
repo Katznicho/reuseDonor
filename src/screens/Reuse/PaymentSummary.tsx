@@ -6,6 +6,7 @@ import {
     View,
     Text,
     TouchableOpacity,
+    Dimensions
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../../hooks/useFirebase';
@@ -19,7 +20,8 @@ import { PAYMENT_STATUS } from '../utils/constants/constants';
 import { RedirectParams } from '../Types/types';
 import { generalStyles } from '../utils/generatStyles';
 import { COLORS } from '../../theme/theme';
-import { Dimensions } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 const { width } = Dimensions.get('window');
 
@@ -27,7 +29,7 @@ const { width } = Dimensions.get('window');
 
 const PaymentSummary = () => {
 
-    const { updateProductPaymentStatus, storePaymentDetails, updatePaymentStatus } = useFirebase();
+    const { updateProductPaymentStatus, updatePaymentStatus } = useFirebase();
     const navigation = useNavigation<any>();
 
     const handleOnRedirect = async (data: RedirectParams) => {
@@ -57,7 +59,7 @@ const PaymentSummary = () => {
     // const [ownerDetails, setOwnerDetails] = useState<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] =
-        useState<string>('card');
+        useState<string>('Other');
 
     const [transactionRef, setTransactionRef] = useState<string>("");
 
@@ -70,37 +72,15 @@ const PaymentSummary = () => {
 
     const { params } = useRoute<any>();
 
-    useEffect(() => {
-        setTransactionRef(generateTransactionRef(10));
-    }, [])
-
 
 
 
     const handlePayment = async () => {
 
         try {
-            if (!transactionRef) return;
-            else {
-                setLoading(true);
-                //update product payment status
-                await updateProductPaymentStatus(params.item.id, PAYMENT_STATUS.PENDING, transactionRef);
+            setLoading(true);
+            setIsVisible(true);
 
-                const paymentDeails = {
-                    productName: params.item?.title,
-                    totalAmount: params.item?.totalAmount,
-                    status: PAYMENT_STATUS.PENDING,
-                    paymentMethod: selectedPaymentMethod,
-                    userId: params.item?.userId,
-                    paidTo: "Reuse Team",
-                    owner: params?.ownerDetails,
-                    transactionRef: transactionRef
-                }
-
-                await storePaymentDetails(paymentDeails, transactionRef);
-
-                setIsVisible(true);
-            }
 
         } catch (error) {
             console.log(error);
@@ -109,7 +89,10 @@ const PaymentSummary = () => {
     };
 
     return (
-        <SafeAreaView style={generalStyles.ScreenContainer}>
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
+        >
             <ScrollView
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -136,53 +119,37 @@ const PaymentSummary = () => {
                     <View style={[styles.paymenthMethod]}>
                         <TouchableOpacity
                             onPress={() => {
-                                handlePaymentMethodSelection('mobilemoneyuganda');
+                                handlePaymentMethodSelection('Wallet');
                             }}
                             style={[
                                 styles.choosePayment,
                                 {
                                     backgroundColor:
-                                        selectedPaymentMethod === 'mobilemoneyuganda'
+                                        selectedPaymentMethod === 'Wallet'
                                             ? COLORS.primaryOrangeHex
                                             : COLORS.primaryLightGreyHex,
                                 },
                             ]}>
-                            <Text style={[styles.textStyle]}>Mobile Money</Text>
+                            <Text style={[styles.textStyle]}>Wallet</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => {
-                                handlePaymentMethodSelection('card');
+                                handlePaymentMethodSelection('Other');
                             }}
                             style={[
                                 styles.choosePayment,
                                 {
                                     backgroundColor:
-                                        selectedPaymentMethod === 'card'
+                                        selectedPaymentMethod === 'Other'
                                             ? COLORS.primaryOrangeHex
                                             : COLORS.primaryLightGreyHex,
                                 },
                             ]}
                         >
-                            <Text style={[styles.textStyle]}>Card Payment</Text>
+                            <Text style={[styles.textStyle]}>Other</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => {
-                                handlePaymentMethodSelection('ussd');
-                            }}
-                            style={[
-                                styles.choosePayment,
-                                {
-                                    backgroundColor:
-                                        selectedPaymentMethod === 'ussd'
-                                            ? COLORS.primaryOrangeHex
-                                            : COLORS.primaryLightGreyHex,
-                                },
-                            ]}
-                        >
-                            <Text style={[styles.textStyle]}>Card Payment</Text>
-                        </TouchableOpacity>
                     </View>
 
                     {/* payment buttons */}
@@ -200,46 +167,7 @@ const PaymentSummary = () => {
                                 <Text style={generalStyles.loginText}>{'Cancel Payment'}</Text>
                             </TouchableOpacity>
                         </View>
-                        <View>
 
-
-                            <PayWithFlutterwave
-                                currency="UGX"
-                                onRedirect={handleOnRedirect}
-                                options={{
-                                    tx_ref: transactionRef ?? generateTransactionRef(10),
-                                    authorization: FLUTTER_WAVE_MERCHANT_KEY,
-                                    customer: {
-                                        email: params?.ownerDetails?.email,
-                                        name: `${params?.ownerDetails?.firstName} ${params?.ownerDetails?.lastName}`,
-                                        phonenumber: params?.ownerDetails?.phoneNumber
-
-                                    },
-                                    amount: parseInt(params.item?.totalAmount),
-                                    payment_options: selectedPaymentMethod,
-                                    customizations: {
-                                        title: 'Reuse App Payments',
-                                        description: `Payment for ${params.item?.title}  `,
-                                        logo: 'https://reuse-f0081.web.app/static/media/reuse.b7e1ca16.png',
-                                    }
-                                }}
-
-                                customButton={(props) => (
-
-
-                                    <TouchableOpacity
-                                        disabled={selectedPaymentMethod === '' || props.disabled}
-                                        style={[generalStyles.loginContainer, { backgroundColor: COLORS.primaryOrangeHex, width: "100%" }]}
-                                        onPress={props.onPress}
-
-                                    >
-                                        <Text style={generalStyles.loginText}>{'Make Payment'}</Text>
-                                    </TouchableOpacity>
-
-
-                                )}
-                            />
-                        </View>
                     </View>
                     {/* payment buttons */}
                 </Dialog>
@@ -255,7 +183,7 @@ const PaymentSummary = () => {
                             borderRadius: 20,
                             marginVertical: 20,
                             padding: 10,
-                            backgroundColor: COLORS.primaryDarkGreyHex,
+                            backgroundColor: COLORS.primaryBlackHex,
                         },
                     ]}>
                     <View style={styles.cardViewStyles}>
@@ -268,7 +196,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {params.item?.title}
+                            {params.item?.name}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -298,7 +226,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {params.item?.totalAmount}
+                            {params.item?.total_amount}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -313,7 +241,7 @@ const PaymentSummary = () => {
                         </Text>
                         <Text
                             style={{ color: COLORS.primaryWhiteHex, padding: 5 }}>
-                            {`${params?.ownerDetails?.firstName} ${params?.ownerDetails?.lastName}`}
+                            {`${params?.ownerDetails?.name}`}
                         </Text>
                         <View style={[styles.bottom]} />
                     </View>
@@ -381,7 +309,7 @@ const PaymentSummary = () => {
                 </View>
 
             </ScrollView>
-        </SafeAreaView>
+        </KeyboardAwareScrollView>
     );
 };
 
