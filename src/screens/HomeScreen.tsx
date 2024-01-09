@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
-  Alert,
   TouchableOpacity,
   Dimensions
 } from 'react-native';
@@ -29,7 +27,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import DeviceInfo from 'react-native-device-info';
 import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 import { usePostQuery } from '../hooks/usePostQuery';
-import axiosInstance from '../axios/axios';
 import UserWallet from '../components/UserWallet';
 import Totals from '../components/Totals';
 
@@ -192,89 +189,8 @@ const HomeScreen = ({ navigation }: any) => {
 
 
         {/* totals */}
-        {/* <Totals /> */}
+        <Totals />
         {/* totals */}
-
-
-        <View style={[generalStyles.flexStyles]}>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="refresh"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalPaymentDocuments} Total Payments</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="product-hunt"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalProductDocuments} Total Products</Text>
-          </TouchableOpacity>
-
-        </View>
-
-        <View style={[generalStyles.flexStyles]}>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Payments')
-            }
-          >
-
-            <View>
-              <FontAwesome name="users"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{communityTotal?.length} Total Communities</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.cardStyles]}
-            onPress={
-              () => navigation.navigate('Deliveries')
-            }
-          >
-
-            <View>
-              <MaterialCommunityIcons name="truck-delivery-outline"
-                style={[styles.iconStyles]}
-                size={50}
-                color={COLORS.primaryWhiteHex}
-              />
-            </View>
-
-            <Text style={[styles.textStyles]}>{totals?.totalDeliveryDocuments} Delivered Products</Text>
-          </TouchableOpacity>
-
-        </View>
-
-
-
-
       </ScrollView>
     </View>
   );
@@ -348,30 +264,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
   },
-  cardStyles: {
-    borderWidth: 1,
-    borderColor: COLORS.primaryOrangeHex,
-    borderRadius: 10,
-    padding: 10,
-    margin: 10,
-    backgroundColor: COLORS.primaryOrangeHex,
-    width: 150,
-    height: 150,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: "center",
-    elevation: 5,
-    color: COLORS.primaryWhiteHex
 
-  },
-  textStyles: {
-    fontWeight: "bold",
-    color: COLORS.primaryWhiteHex
-    // fontSize: 18
-  },
-  iconStyles: {
-    marginBottom: 10
-  }
 });
 
 export default HomeScreen;

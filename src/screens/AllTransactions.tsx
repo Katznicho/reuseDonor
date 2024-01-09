@@ -10,13 +10,8 @@ import { USERPAYMENTS } from './utils/constants/routes';
 const AllTransactions = () => {
     const { isError, data, error, fetchNextPage, hasNextPage, isFetching } = useFetchInfinite("payments", USERPAYMENTS);
     console.log("=========== data=========================")
-    console.log(data?.pages[0].total)
+    console.log(data?.pages[0].data)
     console.log("==========data=====================")
-
-
-
-
-
 
 
 
@@ -26,7 +21,7 @@ const AllTransactions = () => {
     const paymentData = data?.pages.flatMap(page => page.data);
 
     console.log("=============payment data length==========================")
-    console.log(paymentData?.length);
+    console.log(paymentData);
 
 
 
