@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable, FlatList } from 'react-native'
+import { StyleSheet, FlatList } from 'react-native'
 import React from 'react'
 import NotificationCard from './NotificationCard'
 

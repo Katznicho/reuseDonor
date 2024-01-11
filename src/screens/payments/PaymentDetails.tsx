@@ -4,8 +4,6 @@ import {
     View,
     SafeAreaView,
     ScrollView,
-    Pressable,
-    Image,
     Dimensions
 } from 'react-native';
 import React from 'react';

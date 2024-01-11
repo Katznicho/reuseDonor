@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 import { COLORS, SPACING } from '../theme/theme';
 import { RootState } from '../redux/store/dev';
@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
   ImageContainer: {
     height: SPACING.space_36,
     width: SPACING.space_36,
-    borderRadius: SPACING.space_12,
-    borderWidth: 2,
-    borderColor: COLORS.secondaryDarkGreyHex,
+    borderRadius: SPACING.space_24,
+    borderWidth: 0.5,
+    borderColor: COLORS.primaryLightGreyHex,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',

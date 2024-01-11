@@ -1,7 +1,6 @@
 import storage from '@react-native-firebase/storage';
 import { showMessage } from 'react-native-flash-message';
-import firestore from '@react-native-firebase/firestore';
-import { USER_COLLECTION } from '../screens/utils/constants/constants';
+
 
 
 
@@ -33,11 +32,11 @@ export const UploadImage = async (uid: any, imagePicked: any, folder_name: strin
     //get the download url
     const url = await imageRef.getDownloadURL();
     //update the user document with the new photoURL
-    if (isProfileImage) {
-      await firestore().collection(USER_COLLECTION).doc(uid).update({
-        displayPicture: url,
-      });
-    }
+    // if (isProfileImage) {
+    //   await firestore().collection(USER_COLLECTION).doc(uid).update({
+    //     displayPicture: url,
+    //   });
+    // }
     //set image to the url
     image = url;
   } catch (e) {

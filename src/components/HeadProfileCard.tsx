@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, TouchableOpacity, Alert, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,16 +10,14 @@ import { DEFAULT_USER_PROFILE, PROFILE_STORAGE } from '../screens/utils/constant
 import { generalStyles } from '../screens/utils/generatStyles';
 import { COLORS } from '../theme/theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { UPDATEUSERAVATAR } from '../screens/utils/constants/routes';
 
 const HeadProfileCard = () => {
 
 
-    const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
+    const { user, isLoggedIn, authToken } = useSelector((state: RootState) => state.user);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [imagePath, setImagePath] = useState<any>(null);
-
-
-
 
 
 
@@ -37,8 +35,50 @@ const HeadProfileCard = () => {
                 Alert.alert('Something went wrong please try aagin');
             }
             if (image) {
-                dispatch(updateProfilePicture(image));
-                setImagePath(null);
+
+                const headers = new Headers();
+                headers.append('Accept', 'application/json');
+                headers.append('Authorization', `Bearer ${authToken}`);
+                const body = new FormData();
+                body.append('avatar', image);
+                fetch(`${UPDATEUSERAVATAR}`, {
+                    method: 'POST',
+                    headers,
+                    body
+                }).then(response => response.json())
+                    .then(async result => {
+                        console.log('result image update', result)
+                        console.log(result)
+                        if (result.response === 'failure') {
+                            showMessage({
+                                message: 'Something went wrong please try again',
+                                type: 'danger',
+                                icon: 'danger',
+                                duration: 3000,
+                                floating: true,
+                            });
+                        }
+                        else {
+                            dispatch(updateProfilePicture(image));
+                            showMessage({
+                                message: 'Profile picture updated successfully',
+                                type: 'success',
+                                icon: 'success',
+                                duration: 3000,
+                                floating: true,
+                            });
+                        }
+
+                        setImagePath(null);
+                    }).catch(error => {
+                        showMessage({
+                            message: 'Something went wrong please try again',
+                            type: 'danger',
+                            icon: 'danger',
+                            duration: 3000,
+                            floating: true,
+                        });
+                    })
             }
         } catch (error: any) {
             showMessage({
@@ -59,7 +99,7 @@ const HeadProfileCard = () => {
     return (
         <View style={[generalStyles.flexStyles]}>
             <TouchableOpacity
-                style={[{ marginHorizontal: 20 }]}
+                style={[{ marginHorizontal: 20, marginVertical: 10 }]}
                 onPress={() => {
                     if (isLoggedIn) {
                         setShowModal(!showModal);

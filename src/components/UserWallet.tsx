@@ -69,7 +69,9 @@ const UserWallet = () => {
             })
                 .then(response => response.json())
                 .then(async result => {
-                    console.log(result)
+                    setLoading(false)
+                    setPassword("")
+                    setIsVisible(false)
                     if (result?.errors) {
 
                         setErrors(result.errors);
@@ -217,15 +219,15 @@ const UserWallet = () => {
 
             </Dialog>
             {/* dialog */}
-            <View 
-            style={{
-                marginVertical: 10,
-                marginHorizontal: 15,
-                elevation: 5,
-                borderRadius: 10,
-                paddingBottom: 20,
-                backgroundColor: COLORS.primaryBlackHex,
-            }} 
+            <View
+                style={{
+                    marginVertical: 10,
+                    marginHorizontal: 15,
+                    elevation: 5,
+                    borderRadius: 10,
+                    paddingBottom: 20,
+                    backgroundColor: COLORS.primaryBlackHex,
+                }}
             >
                 <View style={[generalStyles.flexStyles, { alignItems: "center", justifyContent: "space-between", marginHorizontal: 5 }]}>
                     <View style={[generalStyles.flexStyles, { alignItems: "center", justifyContent: "center" }]}>
