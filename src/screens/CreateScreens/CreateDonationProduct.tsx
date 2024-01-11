@@ -1,7 +1,7 @@
 
 import { SafeAreaView, Alert, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Wizard, WizardStepStates, } from 'react-native-ui-lib';
+import { KeyboardAwareScrollView, Wizard, WizardStepStates, } from 'react-native-ui-lib';
 import { RootState } from '../../redux/store/dev';
 import { useSelector } from 'react-redux';
 import { UploadImage } from '../../hooks/UploadImage';
@@ -14,6 +14,7 @@ import { COLORS } from '../../theme/theme';
 import { generalStyles } from '../utils/generatStyles';
 import { CREATE_PRODUCT, GET_ALL_CATEGORIES, GET_ALL_COMMUNITIES } from '../utils/constants/routes';
 import { showMessage } from 'react-native-flash-message';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
 
 
 
@@ -83,9 +84,9 @@ const CreateDonationProduct = () => {
 
     const [productDetials, setProductDetails] = useState<any>({
         title: "",
-        community: "",
+        community_id: "",
         description: "",
-        category: "",
+        category_id: "",
         quantity: 0,
         price: 0,
         images: [],
@@ -248,16 +249,15 @@ const CreateDonationProduct = () => {
     const createProduct = async () => {
         try {
             setLoading(true);
-            setLoading(true)
             const headers = new Headers();
             headers.append('Accept', 'application/json');
             headers.append('Authorization', `Bearer ${authToken}`);
 
             const body = new FormData();
             body.append('name', productDetials.title);
-            body.append('community_id', productDetials.community_id);
+            body.append('community_id', productDetials.community_id ? productDetials.community_id : "");
             body.append('description', productDetials.description);
-            body.append('category_id', productDetials.category);
+            body.append('category_id', productDetials.category_id);
             body.append('price', productDetials.price);
             body.append('cover_image', productDetials.coverImage);
             productDetials.images.forEach((image: any) => {
@@ -281,6 +281,9 @@ const CreateDonationProduct = () => {
                 body,
             }).then(response => response.json())
                 .then(async result => {
+                    console.log("===================result=====================")
+                    console.log(result)
+                    console.log("===================result=====================")
                     setLoading(false)
                     if (result?.errors) {
                         showMessage({
@@ -312,7 +315,7 @@ const CreateDonationProduct = () => {
                             title: "",
                             community_id: "",
                             description: "",
-                            category: "",
+                            category_id: "",
                             quantity: 0,
                             price: 0,
                             images: [],
@@ -346,6 +349,8 @@ const CreateDonationProduct = () => {
                             duration: 3000,
                             icon: "success"
                         })
+                        //refresh this screen
+
                         return navigation.navigate("Reuse")
                     }
 
@@ -406,6 +411,7 @@ const CreateDonationProduct = () => {
                     goBack={goBack}
                     loading={loading}
                     createProduct={createProduct}
+                    productDetials={productDetials}
                 />
             default:
                 return null;
@@ -429,8 +435,14 @@ const CreateDonationProduct = () => {
 
 
 
+
+
+
     return (
-        <SafeAreaView style={[generalStyles.ScreenContainer]} >
+        <KeyboardAwareScrollView
+            style={[{ flex: 1, width: '100%' }, generalStyles.ScreenContainer]}
+            keyboardShouldPersistTaps="always"
+        >
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
@@ -474,14 +486,12 @@ const CreateDonationProduct = () => {
 
                 {/* Render the current step */}
                 {renderCurrentStep()}
+                {loading && <ActivityIndicator />}
 
             </ScrollView>
 
 
-
-
-
-        </SafeAreaView>
+        </KeyboardAwareScrollView>
     )
 }
 

@@ -6,7 +6,7 @@ import { COLORS, FONTFAMILY } from '../../theme/theme';
 
 
 
-const ProductLocation = ({ setProductDetails, goBack, loading, createProduct }: any) => {
+const ProductLocation = ({ setProductDetails, goBack, loading, createProduct, productDetials }: any) => {
 
 
 
@@ -70,11 +70,11 @@ const ProductLocation = ({ setProductDetails, goBack, loading, createProduct }: 
 
                             <TouchableOpacity
                                 style={[generalStyles.loginContainer, {
-                                    width: "30%",
+                                    width: "50%",
                                     marginHorizontal: 10
                                 }]}
                                 onPress={createProduct}
-                                disabled={loading}
+                                disabled={loading || productDetials.estimatedPickUp == ""}
                             >
                                 <Text style={generalStyles.loginText}>
                                     {loading ? "Creating ..." : "Create Product"}

@@ -68,7 +68,7 @@ const ProductFlatlist = ({ productData, loadMoreData, isFetching }: any) => {
                         <Ionicons
                             name="chevron-forward"
                             size={24}
-                            color={COLORS.primaryBlackHex}
+                            color={COLORS.primaryWhiteHex}
                         />
                         {/* icon */}
                     </Pressable>

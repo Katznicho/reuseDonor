@@ -27,7 +27,9 @@ const TabNavigator = () => {
       screenOptions={{
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarActiveTintColor: COLORS.primaryOrangeHex,
+        tabBarInactiveTintColor: COLORS.primaryLightGreyHex,
         tabBarStyle: styles.tabBarStyle,
         tabBarBackground: () => (
           <BlurView
@@ -42,6 +44,7 @@ const TabNavigator = () => {
         name="HomeTab"
         component={HomeStack}
         options={{
+          title: "Home",
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon
               name="home"
@@ -53,9 +56,10 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
       <Tab.Screen
-        name="Reuse"
+        name="Create"
         component={CreateDonationProduct}
         options={{
+          title: "Create",
           tabBarIcon: ({ focused, color, size }) => (
             <AntDesign
               name="pluscircleo"
@@ -67,9 +71,10 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
       <Tab.Screen
-        name="Favorite"
+        name="Reuse"
         component={ReuseStack}
         options={{
+          title: "Reuse",
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon
               name="like"
@@ -81,9 +86,10 @@ const TabNavigator = () => {
           ),
         }}></Tab.Screen>
       <Tab.Screen
-        name="History"
+        name="Notifications"
         component={MyNotificationStack}
         options={{
+          title: "Notifications",
           tabBarIcon: ({ focused, color, size }) => (
             <CustomIcon
               name="bell"
@@ -99,6 +105,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileStack}
         options={{
+          title: "Profile",
           tabBarIcon: ({ focused, color, size }) => (
             <AntDesign
               name="user"

@@ -47,6 +47,8 @@ const Profile = () => {
 
   ]);
 
+  // const tabBarHeight = useBottomTabBarHeight();
+
 
   return (
     <SafeAreaView

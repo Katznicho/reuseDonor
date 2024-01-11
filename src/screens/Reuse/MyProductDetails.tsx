@@ -158,20 +158,19 @@ const MyProductDetails = () => {
             <View>
                 <Text style={styles.title}>More Images</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {params?.item?.images &&
-                        JSON.parse(params.item.images).map((item: string, index: number) => {
-                            return (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={styles.imageContainer}
-                                >
-                                    <Image
-                                        source={{ uri: item }}
-                                        style={styles.image}
-                                    />
-                                </TouchableOpacity>
-                            );
-                        })}
+                    {params?.item?.images.map((item: string, index: number) => {
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.imageContainer}
+                            >
+                                <Image
+                                    source={{ uri: item }}
+                                    style={styles.image}
+                                />
+                            </TouchableOpacity>
+                        );
+                    })}
                 </ScrollView>
             </View>
             {/* more pictures */}

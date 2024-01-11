@@ -102,7 +102,7 @@ export default function useFetchInfinite(queryKey: string, url: string, status: 
         cacheTime: Infinity,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
-        // refetchInterval: 10000,
+        refetchInterval: 10000,
     });
 
     return {

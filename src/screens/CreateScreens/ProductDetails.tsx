@@ -64,11 +64,11 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                     label='Product Category'
                     labelColor={COLORS.primaryWhiteHex}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
-                    value={productDetials.category}
+                    value={productDetials.category_id}
                     enableModalBlur={false}
                     onChange={item => {
                         setProductDetails((prev: any) => {
-                            return { ...prev, category: item }
+                            return { ...prev, category_id: item }
                         })
 
                     }}
@@ -246,9 +246,9 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                             }}
                             // fractionDigits={2}
                             // initialNumber={productDetials.price}
-                            onChangeNumber={(data: NumberInputData) => {
+                            onChangeNumber={(data: any) => {
                                 setProductDetails((prev: any) => {
-                                    return { ...prev, price: data }
+                                    return { ...prev, price: data.number }
                                 })
 
                             }}

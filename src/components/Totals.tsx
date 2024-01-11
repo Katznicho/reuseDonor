@@ -24,9 +24,9 @@ const Totals = () => {
         },
     })
     //totals
-    console.log('==========community totals==========================')
-    console.log(data)
-    console.log('===========community totals=========================')
+    // console.log('==========community totals==========================')
+    // console.log(data)
+    // console.log('===========community totals=========================')
     return (
         <View>
 
