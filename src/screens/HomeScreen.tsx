@@ -1,29 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
-  StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Dimensions
 } from 'react-native';
-
-import {
-  BORDERRADIUS,
-  COLORS,
-  FONTFAMILY,
-  FONTSIZE,
-  SPACING,
-} from '../theme/theme';
 import HeaderBar from '../components/HeaderBar';
 import { RootState } from '../redux/store/dev';
 import { useSelector } from 'react-redux';
 import { useShowGreeting } from '../hooks/useShowGreetings';
 import messaging from '@react-native-firebase/messaging';
-import Geolocation from '@react-native-community/geolocation';
 import { generalStyles } from './utils/generatStyles';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
 import { SAVE_DEVICE_INFO } from './utils/constants/routes';
 import { usePostQuery } from '../hooks/usePostQuery';
@@ -37,8 +23,6 @@ import useGetUserLocation from '../hooks/useGetUserLocation';
 
 
 const HomeScreen = ({ navigation }: any) => {
-
-  const [position, setPosition] = useState<any>(null);
 
   const { data, error, isLoading, refetch } = usePostQuery<any>({
     endpoint: '/auth/hasWalletAccount',
@@ -55,28 +39,11 @@ const HomeScreen = ({ navigation }: any) => {
 
 
 
-  const [totals, setTotal] = useState<any>(null)
-  const [communityTotal, setCommunityTotal] = useState<any>(null)
-
   const { user, authToken } = useSelector((state: RootState) => state.user);
 
   let greetings = useShowGreeting()
 
-  // const getCurrentPosition = () => {
-  //   Geolocation.getCurrentPosition(
-  //     (pos: any) => {
 
-  //       const { latitude, longitude } = pos.coords;
-  //       setPosition({ latitude, longitude });
-  //     },
-  //     (error: any) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
-  //     { enableHighAccuracy: true, }
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   getCurrentPosition();
-  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -162,7 +129,7 @@ const HomeScreen = ({ navigation }: any) => {
       });
   }
 
-  const { } = useGetUserLocation()
+  const { position } = useGetUserLocation()
 
 
   return (
