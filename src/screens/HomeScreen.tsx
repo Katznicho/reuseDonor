@@ -30,6 +30,7 @@ import { usePostQuery } from '../hooks/usePostQuery';
 import UserWallet from '../components/UserWallet';
 import Totals from '../components/Totals';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import useGetUserLocation from '../hooks/useGetUserLocation';
 
 
 
@@ -160,6 +161,8 @@ const HomeScreen = ({ navigation }: any) => {
       .catch(error => {
       });
   }
+
+  const { } = useGetUserLocation()
 
 
   return (
