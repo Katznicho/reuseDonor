@@ -51,7 +51,7 @@ const Totals = () => {
 
                 <TouchableOpacity style={[styles.cardStyles]}
                     onPress={
-                        () => navigation.navigate('Payments')
+                        () => navigation.navigate('Reuse')
                     }
                 >
 

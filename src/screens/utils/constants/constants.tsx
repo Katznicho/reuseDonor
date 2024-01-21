@@ -3,6 +3,9 @@ export const APP_GENDER = {
     FEMALE: "Female"
 }
 
+//documents
+export const USER_DOCUMENT_STORAGE: string = 'users/documents';
+
 export const APP_USERS = {
     REUSER: "REUSER",
     DONOR: "DONOR",

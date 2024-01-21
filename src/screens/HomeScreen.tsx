@@ -177,20 +177,35 @@ const HomeScreen = ({ navigation }: any) => {
 
         {/* wallet button */}
         {
-          data?.response == "failure" && (<TouchableOpacity
-            activeOpacity={1}
-            onPress={() => navigation.navigate('CreateWallet')}
-            style={generalStyles.loginContainer}
-          >
-            <Text style={generalStyles.loginText}>{'Add Wallet'}</Text>
-          </TouchableOpacity>)
+          data?.response == "failure" && (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => navigation.navigate('CreateWallet')}
+              style={generalStyles.loginContainer}
+            >
+              <Text style={generalStyles.loginText}>{'Add Wallet'}</Text>
+            </TouchableOpacity>
+          )
         }
         {/* wallet button */}
+
+
 
         {
           data?.response == "success" && (<UserWallet />)
         }
         {/* header */}
+
+
+        {/* create product */}
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.navigate('Create')}
+          style={[generalStyles.loginContainer, { marginTop: 5, borderRadius: 10 }]}
+        >
+          <Text style={generalStyles.loginText}>{'Create Products'}</Text>
+        </TouchableOpacity>
+        {/* create product */}
 
 
         {/* totals */}

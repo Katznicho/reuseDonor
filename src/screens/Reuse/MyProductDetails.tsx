@@ -1,5 +1,5 @@
 import { Image, ImageBackground, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Switch } from 'react-native-ui-lib';
 import AntDesign from 'react-native-vector-icons/AntDesign';

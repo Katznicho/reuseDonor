@@ -1,8 +1,7 @@
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { generalStyles } from '../utils/generatStyles'
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native'
-import { useFirebase } from '../../hooks/useFirebase'
 import { COLORS } from '../../theme/theme'
 import { useNavigation } from '@react-navigation/native'
 import { ActivityIndicator } from '../../components/ActivityIndicator'
@@ -10,17 +9,26 @@ import { APP_USERS } from '../utils/constants/constants'
 import { showMessage } from 'react-native-flash-message'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { REGISTER } from '../utils/constants/routes'
-import { validateEmail } from '../utils/helpers/helpers'
+import { validateEmail } from '../utils/helpers/helpers';
+import PhoneInput from "react-native-phone-number-input";
 
 const Register = () => {
 
   const navigation = useNavigation<any>();
   const [firstName, setFirstName] = React.useState<any>('');
   const [lastName, setLastName] = React.useState<any>('');
-  const [phoneNumber, setPhoneNumber] = React.useState<any>('');
   const [email, setEmail] = React.useState<any>('');
   const [password, setPassword] = React.useState<any>('');
   const [confirmPassword, setConfirmPassword] = React.useState<any>('');
+
+
+  //phone number details
+  const [value, setValue] = useState("");
+  // const [formattedValue, setFormattedValue] = useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState<any>('');
+  const [valid, setValid] = useState(false);
+  const phoneInput = useRef<PhoneInput>(null);
+  //phone number details
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({
@@ -226,7 +234,7 @@ const Register = () => {
           </View>
 
           <TextInput
-            style={generalStyles.formInput}
+            style={[generalStyles.formInput, styles.extraMargingRight]}
             placeholder={'enter first name'}
             keyboardType="default"
             placeholderTextColor={COLORS.primaryWhiteHex}
@@ -250,7 +258,7 @@ const Register = () => {
           </View>
 
           <TextInput
-            style={generalStyles.formInput}
+            style={[generalStyles.formInput, styles.extraMargingRight]}
             placeholder={'enter last name'}
             keyboardType="default"
             placeholderTextColor={COLORS.primaryWhiteHex}
@@ -271,18 +279,27 @@ const Register = () => {
         <View style={generalStyles.formContainer}>
           <View>
             <Text style={generalStyles.formInputTextStyle}>
-              Phone Number</Text>
+              Phone Number </Text>
           </View>
-          <TextInput
-            style={generalStyles.formInput}
-            placeholder="Enter phone number with country code"
-            placeholderTextColor={COLORS.primaryLightGreyHex}
-            keyboardType="number-pad"
-            value={phoneNumber}
-            onChangeText={text => setPhoneNumber(text)}
-
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={value}
+            defaultCode="UG"
+            layout="second"
+            onChangeText={(text) => {
+              setValue(text);
+            }}
+            onChangeFormattedText={(text) => {
+              console.log(text)
+              setPhoneNumber(text);
+            }}
+            placeholder={'enter phone number'}
+            containerStyle={[generalStyles.formInput, { backgroundColor: COLORS.primaryLightWhiteGrey, }]}
+            textContainerStyle={{ paddingVertical: 0, backgroundColor: COLORS.primaryLightWhiteGrey }}
+            textInputProps={{
+              placeholderTextColor: COLORS.primaryWhiteHex
+            }}
           />
-
           <View>
             {errors.phoneNumber && <Text style={generalStyles.errorText}>{errors.phoneNumber}</Text>}
           </View>
@@ -300,7 +317,7 @@ const Register = () => {
           </View>
 
           <TextInput
-            style={generalStyles.formInput}
+            style={[generalStyles.formInput, styles.extraMargingRight]}
             placeholder={'enter email'}
             keyboardType="email-address"
             placeholderTextColor={COLORS.primaryWhiteHex}
@@ -405,26 +422,7 @@ const Register = () => {
           onPress={() => onRegister()}>
           <Text style={generalStyles.loginText}>{'Register'}</Text>
         </TouchableOpacity>
-        <>
-          {/* <Text style={styles.orTextStyle}> {'OR'}</Text>
-      <Text style={styles.facebookText}>
-        {'Login With Google'}
-      </Text> */}
-        </>
 
-
-        {/* <IMGoogleSignInButton
-      containerStyle={styles.googleButtonStyle}
-      onPress={onGoogleButtonPress}
-    /> */}
-
-        {/* <TouchableOpacity
-      style={styles.phoneNumberContainer}
-      onPress={() => navigation.navigate('Sms', { isSigningUp: false })}>
-      <Text style={styles.phoneNumber}>
-        Login with phone number
-      </Text>
-    </TouchableOpacity> */}
 
         {loading && <ActivityIndicator />}
       </KeyboardAwareScrollView>
@@ -441,5 +439,9 @@ const styles = StyleSheet.create({
   viewStyles: {
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginRight: 15
   },
+  extraMargingRight: {
+    marginRight: 15
+  }
 })

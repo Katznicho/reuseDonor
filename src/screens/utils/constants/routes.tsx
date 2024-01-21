@@ -10,7 +10,8 @@ export const VERIFY_EMAIL = `${BASE_URL}/auth/verifyEmail`
 export const SAVE_DEVICE_INFO = `${BASE_URL}/auth/saveDeviceInfo`
 export const SETUP_WALLET_ACCOUNT = `${BASE_URL}/auth/setUpUserWalletAccount`;
 export const UPDATEWALLETBALANCE = `${BASE_URL}/auth/updateShowWalletBalance`
-export const UPDATEUSERAVATAR = `${BASE_URL}/auth/updateUserAvatarUrl`
+export const UPDATEUSERAVATAR = `${BASE_URL}/auth/updateUserAvatarUrl`;
+export const UPDATE_USER_LOCATION =  `${BASE_URL}/auth/updateUserLocation`
 
 //payments
 export const PROCESSORDER = `${BASE_URL}/processOrder`;
@@ -32,6 +33,7 @@ export const GET_ALL_COMMUNITIES = `${BASE_URL}/getAllAvailableCommunities`
 export const GET_DONORS = `${BASE_URL}/getDonorsByPage`
 export const GET_DONOR_DETAILS = `${BASE_URL}/getDonorDetails`
 export const GET_DONOR_TOTALS = `${BASE_URL}/getDonorTotals`
+export const VERIFY_DONOR = `${BASE_URL}/donorUpdateVerificationDocument`
 
 
 //produucts 

@@ -1,5 +1,5 @@
 
-import { SafeAreaView, Alert, ScrollView } from 'react-native'
+import {  Alert, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { KeyboardAwareScrollView, Wizard, WizardStepStates, } from 'react-native-ui-lib';
 import { RootState } from '../../redux/store/dev';

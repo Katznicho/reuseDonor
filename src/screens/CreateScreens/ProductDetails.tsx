@@ -60,7 +60,6 @@ const ProductDetails = ({ productDetials, setProductDetails, categories, communi
                 <Picker
                     style={styles.fieldStyles}
                     placeholder=" enter product category"
-                    // floatingPlaceholder
                     label='Product Category'
                     labelColor={COLORS.primaryWhiteHex}
                     placeholderTextColor={COLORS.primaryLightGreyHex}
