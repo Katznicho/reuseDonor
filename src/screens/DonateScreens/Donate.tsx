@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store/dev';
@@ -10,14 +10,22 @@ import { showMessage } from 'react-native-flash-message';
 import { generalStyles } from '../utils/generatStyles';
 import { COLORS } from '../../theme/theme';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
+import PhoneInput from "react-native-phone-number-input";
 
 
 const Donate = () => {
     const [amount, setAmount] = useState<string>('')
     const [reason, setReason] = useState<string>('')
-    const [phoneNumber, setPhoneNumber] = useState<string>('')
+    // const [phoneNumber, setPhoneNumber] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
-    const {  authToken } = useSelector((state: RootState) => state.user);
+    const { authToken } = useSelector((state: RootState) => state.user);
+
+    //phone number details
+    const [value, setValue] = useState("");
+    // const [formattedValue, setFormattedValue] = useState("");
+    const [phoneNumber, setPhoneNumber] = React.useState<any>('');
+    const [valid, setValid] = useState(false);
+    const phoneInput = useRef<PhoneInput>(null);
 
     const [errors, setErrors] = useState<any>({});
 
@@ -185,18 +193,27 @@ const Donate = () => {
                 <View style={generalStyles.formContainer}>
                     <View>
                         <Text style={generalStyles.formInputTextStyle}>
-                            Phone Number</Text>
+                            Phone Number </Text>
                     </View>
-                    <TextInput
-                        style={generalStyles.formInput}
-                        placeholder="Enter phone number with country code"
-                        placeholderTextColor={COLORS.primaryLightGreyHex}
-                        keyboardType="number-pad"
-                        value={phoneNumber}
-                        onChangeText={text => setPhoneNumber(text)}
-
+                    <PhoneInput
+                        ref={phoneInput}
+                        defaultValue={value}
+                        defaultCode="UG"
+                        layout="second"
+                        onChangeText={(text) => {
+                            setValue(text);
+                        }}
+                        onChangeFormattedText={(text) => {
+                            console.log(text)
+                            setPhoneNumber(text);
+                        }}
+                        placeholder={'enter phone number'}
+                        containerStyle={[generalStyles.formInput, { backgroundColor: COLORS.primaryLightWhiteGrey, }]}
+                        textContainerStyle={{ paddingVertical: 0, backgroundColor: COLORS.primaryLightWhiteGrey }}
+                        textInputProps={{
+                            placeholderTextColor: COLORS.primaryWhiteHex
+                        }}
                     />
-
                     <View>
                         {errors.phoneNumber && <Text style={generalStyles.errorText}>{errors.phoneNumber}</Text>}
                     </View>
